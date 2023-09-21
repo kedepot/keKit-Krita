@@ -1,4 +1,4 @@
-# keKit for Krita
+# keKit [](#)  
 
 A simple general purpose script collection plug-in.
 
@@ -7,7 +7,7 @@ Designed to be as compact as possible when used as a docker:
 ![img_docker](https://github.com/kedepot/keKit-Krita/assets/95410139/d03a03b9-958e-4b74-8142-39e8d68db54d)
 
 &nbsp;
-### Installation
+### Installation [](###)  
 1. Download zip file (from 'Releases' --> )
 3. Follow the Installation Guide in [Krita Docs](https://docs.krita.org/en/user_manual/python_scripting/install_custom_python_plugin.html#how-to-install-a-python-plugin)
 
@@ -18,7 +18,7 @@ Note: All the scripts can be assigned to shortcuts:
 
 &nbsp;
 &nbsp;
-### keKit Scripts:
+### keKit Scripts: [](###)  
 
 &nbsp;
 #### Center
@@ -69,5 +69,5 @@ Choose preferred pixel transform processing method for Half, Double & Fit Bounds
 - Mitchell, Lanczos3 etc.
 
 &nbsp;
-### Feedback
+### Feedback: [](###)
 Right here, leave messages (with appropriate tags & description) in Issues tab at the top!
