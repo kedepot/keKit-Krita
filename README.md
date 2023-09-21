@@ -8,8 +8,8 @@ Designed to be as compact as possible when used as a docker:
 
 &nbsp;
 ### Installation
-1. Download zip file
-2. Follow the Installation Guide in [Krita Docs](https://docs.krita.org/en/user_manual/python_scripting/install_custom_python_plugin.html#how-to-install-a-python-plugin)
+1. Download zip file (from 'Releases' --> )
+3. Follow the Installation Guide in [Krita Docs](https://docs.krita.org/en/user_manual/python_scripting/install_custom_python_plugin.html#how-to-install-a-python-plugin)
 
 Note: All the scripts can be assigned to shortcuts:
 
