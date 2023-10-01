@@ -10,6 +10,14 @@ Designed to be as compact as possible when used as a docker:
 ### Installation [](###)  
 1. Download zip file (from 'Releases' --> )
 3. Follow the Installation Guide in [Krita Docs](https://docs.krita.org/en/user_manual/python_scripting/install_custom_python_plugin.html#how-to-install-a-python-plugin)
+&nbsp;
+### Updating [](###)  
+1. Close Krita
+2. Manually overwrite the **kekit folder** in **your plugin directory** (See [Krita Docs](https://docs.krita.org/en/user_manual/python_scripting/install_custom_python_plugin.html#how-to-install-a-python-plugin) for system specific locatation)
+3. Restart Krita
+
+&nbsp;
+
 
 Note: All the scripts can be assigned to shortcuts:
 
