@@ -39,19 +39,20 @@ Centers the selected/active layer
 Calculates a relative grid (with two subdivisions) based on the document size
 
 Options:
-- **Snap**: Also toggles snapping on/off.
+- **Snap**: Also toggles snapping on/off
   _Note: Krita layer snapping only uses *the mouse pointer*: Layer bounds+center snapping TBD_
-- **3rd**: Uses Rule of Thirds instead for quad grid layout.
+- **3rd**: Uses Rule of Thirds instead for quad grid layout
 
 &nbsp; 
 #### keBatch
 ![img_batchexport](https://github.com/kedepot/keKit-Krita/assets/95410139/8bb6f406-a491-496a-8bb8-ada4a6a5e70b)
 
-- Batch Exports **visible Groups/Folders**.
-- Automatically creates a subfolder for the exports based on the document name & location.
+- Batch-Exports **visible paint layers, group layers, clone layers, & vector layers** from the current Active Docuement
+- Automatically creates a subfolder for the exports based on the document name & location
     - Thus requires new documents to be **saved** before batch operation
-- Visible **root layers** (& groups that are named 'Fx' & 'Background') are **excluded**:
+- Visible **root** layers & groups that are named 'Fx' & 'Background' are **excluded**:
     - Useful for processing each of the exported groups with the same effects and/or backdrop
+    - Any capitalization is accepted (e.g: fx, FX, Fx etc.) exclusion-words are converted to lower-case in the script
 
 Option:
 - **JPG**: keBatch uses JPG instead of PNG.
