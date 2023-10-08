@@ -16,16 +16,18 @@
 
 
 from krita import *
-from .kekit_docker import keKitDocker
+from .kekit_docker import keKitDocker, v
 from .ke_grid import keGrid
 from .ke_batch import keBatch
+from .ke_toRGBA import ToRGBA
 from .ke_transforms import keCenter, keFitBounds, keHalve, keDouble
 
-__version__ = '0.1'
+__version__ = v
 __license__ = 'GPLv3+ LGPLv3+'
 __author__ = 'Kjell Emanuelsson'
-__email__ = 'contact@nulldevice.anonaddy.com'
+__email__ = 'contact@ke-code.xyz'
 __url__ = 'https://ke-code.xyz'
+
 
 instance = Krita.instance()
 
@@ -36,6 +38,7 @@ instance.addExtension(keFitBounds(instance))
 instance.addExtension(keHalve(instance))
 instance.addExtension(keDouble(instance))
 instance.addExtension(keBatch(instance))
+instance.addExtension(ToRGBA(instance))
 
 # Load Docker (Last)
 DOCKER_ID = 'kekit_docker'

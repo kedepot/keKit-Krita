@@ -19,9 +19,6 @@ class keBatch(Extension):
         docName = doc.fileName()
         excluded = ["fx", "background"]
 
-        if not docName:
-            print("Quit?")
-
         print("\nkeBatch Export Process Started...")
 
         new_dir = os.path.dirname(docName) + "/" + doc.name() + "_batch-export"
@@ -33,7 +30,7 @@ class keBatch(Extension):
             try:
                 os.makedirs(new_dir)
             except OSError as e:
-                view.showFloatingMessage("Batch Export: Create directory failed! Not saved?", app.icon("16_light_warning"), 3000, 1)
+                view.showFloatingMessage("Batch Export: Create directory failed! Unsaved file?", app.icon("16_light_warning"), 3000, 1)
                 raise e
 
         # grab jpg option
@@ -73,7 +70,8 @@ class keBatch(Extension):
             ep.setProperty("transparencyFillcolor", [0,0,0]) # rgb 0-255
 
         # Groups to Export
-        nodes = [n for n in root_node.childNodes() if n.type() == "grouplayer" and n.visible() and n.name().lower() not in excluded]
+        e_t = {"paintlayer", "grouplayer", "clonelayer", "vectorlayer"}
+        nodes = [n for n in root_node.childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in excluded]
         total_count = str(len(nodes))
         count = 0
 
@@ -98,7 +96,8 @@ class keBatch(Extension):
             n.setVisible(True)
 
         doc.setBatchmode(False)
-
+        doc.refreshProjection()
+        
         # Summary pop-up (mostly to signal export is done)
         if view is not None:
             msg = " Batch Export: %s / %s " % (str(count), total_count)
