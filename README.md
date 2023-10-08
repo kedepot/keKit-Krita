@@ -94,8 +94,8 @@ Instead, Kritas "Split-Alpha" export can be used in these cases, including toRGB
 - If you only use the 3 RGB channels, you may export/save as usual
 <br>
 
-- If you include a 4th Alpha layer, the layer will need to be manually converted to a *Transparency Mask* (RMB, convert...)
-- If you want 4-channel RGBA, RMB the Alpha (as Group Transparency Mask) and select *Split-Alpha / Save as Merged*
+- If there's an Alpha layer, it will need to be manually converted to a *Transparency Mask* (RMB, convert...)
+- RMB the Alpha layer (as Group Transparency Mask) and select *Split-Alpha / Save as Merged*
   - As described the [Krita docs](https://docs.krita.org/en/reference_manual/layers_and_masks/split_alpha.html).
 - Note: The alpha layer will selected & named "makeTM-SplitAlphaMerged" as a reminder/guide ;>
 
