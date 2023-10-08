@@ -4,7 +4,7 @@ A simple general purpose script collection plug-in.
 
 Designed to be as compact as possible when used as a docker:
 
-![img_docker](https://github.com/kedepot/keKit-Krita/assets/95410139/d03a03b9-958e-4b74-8142-39e8d68db54d)
+![2023-10-46_16-14-46](https://github.com/kedepot/keKit-Krita/assets/95410139/e9511413-1fa6-41a3-b449-27f598940441)
 
 &nbsp;
 ### Installation [](###)  
@@ -78,5 +78,30 @@ Choose preferred pixel transform processing method for Half, Double & Fit Bounds
 - Mitchell, Lanczos3 etc.
 
 &nbsp;
+#### toRBGA
+![2023-10-23_16-51-23](https://github.com/kedepot/keKit-Krita/assets/95410139/e837f3d1-ee43-4093-9f3c-37b062778b28)
+
+Automates Channel-packing 3-4 layers into a single image using the RGBA channels. Often used in real-time 3D. ['Splat-maps'](https://en.wikipedia.org/wiki/Texture_splatting) or ['ORM Textures'](https://docs.godotengine.org/en/stable/tutorials/3d/standard_material_3d.html) for example. 
+
+*Note on Alpha: A layers Alpha in Krita is not editable separately (it will always destroy data in the RGB channels in standard PNG export).
+Instead, Kritas "Split-Alpha" export can be used in these cases, including toRGBA, for full RGBA-packing export.*
+
+**Instructions:**
+- Select 1-4 layers : Selection order is important: **Select each layer in intended RGBA order**
+- Run **toRGBA**
+- The selected layers will be arranged in a group, prepared for export
+  - The "New" option toggled will create a new document for the setup
+- If you only use the 3 RGB channels, you may export/save as usual
+<br>
+
+- If you include a 4th Alpha layer, the layer will need to be manually converted to a *Transparency Mask* (RMB, convert...)
+- If you want 4-channel RGBA, RMB the Alpha (as Group Transparency Mask) and select *Split-Alpha / Save as Merged*
+  - As described the [Krita docs](https://docs.krita.org/en/reference_manual/layers_and_masks/split_alpha.html).
+- Note: The alpha layer will selected & named "makeTM-SplitAlphaMerged" as a reminder/guide ;>
+
+  
+&nbsp;
 ### Feedback: [](###)
-Right here, leave messages (with appropriate tags & description) in Issues tab at the top!
+Right here. Leave messages (with appropriate tags & description) in Issues tab at the top!
+
+Alternatively, check the [keKit thread](https://krita-artists.org/t/kekit-for-krita/74504) on the krita-artists.org forum.
