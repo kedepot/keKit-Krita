@@ -56,9 +56,9 @@ Options:
 
 Option:
 - **JPG**: keBatch uses JPG instead of PNG.
-    - Defaults (override in ke_batch.py if needed):
-    - PNG: Alpha, Level 0/Uncompressed. *For maximum speed now - [pngcrush](https://en.wikipedia.org/wiki/Pngcrush) later*
-    - JPG: 85%. *For WIP & quality insensitive use-cases*
+- Format Defaults: (override in ke_batch.py if needed)
+  - PNG: Alpha, Level 0/Uncompressed. *For maximum speed now - [pngcrush](https://en.wikipedia.org/wiki/Pngcrush) later*
+  - JPG: 85%. *For WIP & quality insensitive use-cases*
 
 *Note: Slow - the process can take a long time in big documents with a lot groups*
 
