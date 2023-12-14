@@ -6,7 +6,7 @@
         <Action name="keGrid">
         <icon></icon>
         <text>keGrid</text>
-        <whatsThis>Useful AutoGrid</whatsThis>
+        <whatsThis>Relative Grid</whatsThis>
         <toolTip></toolTip>
         <iconText></iconText>
         <activationFlags>10000</activationFlags>
@@ -19,12 +19,38 @@
         <Action name="keCenter">
         <icon></icon>
         <text>keCenter</text>
-        <whatsThis>...</whatsThis>
+        <whatsThis>Center Layer</whatsThis>
         <toolTip></toolTip>
         <iconText></iconText>
         <activationFlags>1</activationFlags>
         <activationConditions>8</activationConditions>
         <shortcut>ctrl+alt+*</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+        
+        <Action name="keCenterH">
+        <icon></icon>
+        <text>keCenterH</text>
+        <whatsThis>Center Layer Horizontally</whatsThis>
+        <toolTip></toolTip>
+        <iconText></iconText>
+        <activationFlags>1</activationFlags>
+        <activationConditions>8</activationConditions>
+        <shortcut></shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+        
+        <Action name="keCenterV">
+        <icon></icon>
+        <text>keCenterV</text>
+        <whatsThis>Center Layer Vertically</whatsThis>
+        <toolTip></toolTip>
+        <iconText></iconText>
+        <activationFlags>1</activationFlags>
+        <activationConditions>8</activationConditions>
+        <shortcut></shortcut>
         <isCheckable>false</isCheckable>
         <statusTip></statusTip>
         </Action>
