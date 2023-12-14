@@ -29,8 +29,11 @@ Note: All the scripts can be assigned to shortcuts:
 ### keKit Scripts: [](###)  
 
 &nbsp;
-#### Center
-Centers the selected/active layer
+#### Center 
+Centers the selected/active layer  
+Variants:
+- H : Centers layer to Horizontal center (only)
+- V : Centers layer to Vertical center (only)
 
 &nbsp;
 #### keGrid
