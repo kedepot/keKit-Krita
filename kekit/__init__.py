@@ -20,7 +20,7 @@ from .kekit_docker import keKitDocker, v
 from .ke_grid import keGrid
 from .ke_batch import keBatch
 from .ke_toRGBA import ToRGBA
-from .ke_transforms import keCenter, keFitBounds, keHalve, keDouble
+from .ke_transforms import keCenter, keFitBounds, keHalve, keDouble, keCenterH, keCenterV
 
 __version__ = v
 __license__ = 'GPLv3+ LGPLv3+'
@@ -33,6 +33,8 @@ instance = Krita.instance()
 
 # Load Extensions (first)
 instance.addExtension(keCenter(instance))
+instance.addExtension(keCenterH(instance))
+instance.addExtension(keCenterV(instance))
 instance.addExtension(keGrid(instance))
 instance.addExtension(keFitBounds(instance))
 instance.addExtension(keHalve(instance))

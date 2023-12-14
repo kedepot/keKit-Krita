@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import (
 )
 
 
-v = '0.12'
+v = '0.13'
 
 
 class keKitDocker(DockWidget):
@@ -73,7 +73,13 @@ class keKitDocker(DockWidget):
         # Center
         center_button = QPushButton("Center")
         center_button.setToolTip("Places selected layer in the center of the document")
-
+        center_h_button = QPushButton("H")
+        center_h_button.setToolTip("Places selected layer in the horizontal center of the document (only)")
+        center_h_button.setMaximumWidth(40)
+        center_v_button = QPushButton("V")
+        center_v_button.setToolTip("Places selected layer in the vertical center of the document (only)")
+        center_v_button.setMaximumWidth(40)
+        
         # Fit Bounds
         fit_button = QPushButton("Fit Bounds")
         fit_button.setToolTip("Stretches selected layer to fit the document bounds")
@@ -122,6 +128,8 @@ class keKitDocker(DockWidget):
         h1.setSpacing(1)
         # h1.setAlignment(Qt.AlignLeft)
         h1.addWidget(center_button)
+        h1.addWidget(center_h_button)
+        h1.addWidget(center_v_button)
         h1.addWidget(QLabel(separator))
         h1.addWidget(grid_button)
         h1.addWidget(grid_snap)
@@ -159,6 +167,8 @@ class keKitDocker(DockWidget):
         grid_button.clicked.connect(partial(ButtonClicked, "keGrid"))
         batch_button.clicked.connect(partial(ButtonClicked, "keBatch"))
         center_button.clicked.connect(partial(ButtonClicked, "keCenter"))
+        center_h_button.clicked.connect(partial(ButtonClicked, "keCenterH"))
+        center_v_button.clicked.connect(partial(ButtonClicked, "keCenterV"))
         fit_button.clicked.connect(partial(ButtonClicked, "keFitBounds"))
         halve_button.clicked.connect(partial(ButtonClicked, "keHalve"))
         double_button.clicked.connect(partial(ButtonClicked, "keDouble"))

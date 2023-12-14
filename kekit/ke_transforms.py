@@ -32,48 +32,54 @@ def tf(op):
     elif op == "double":
         node.scaleNode(QPoint(ncx, ncy), int(nx*2), int(ny*2), cb)
     else:
-        # center
+        # center & fit_bounds
         w, h = int(dx / 2), int(dy / 2)
-        center_node(w, h, ncx, ncy, node)
-
-        if op == "fit_bounds":
-            k_aspect = None
-
-            for item in k.findChildren(QtWidgets.QCheckBox):
-                if item.text() == "Aspect":
-                    k_aspect = item
-                    break
-
-            if k_aspect.isChecked():
-                # a little backwards
-                factor = dx / float(nx)
-                xc_y = int((float(ny)*float(factor)))
-                xc_x = dx
-                factor = dy / float(ny)
-                yc_y = dy
-                yc_x = int((float(nx)*float(factor)))
-
-                if xc_x >= dx and xc_y <= dy:
-                    new_x = xc_x
-                    new_y = xc_y
-                else:
-                    new_x = yc_x
-                    new_y = yc_y
-            else:
-                new_x, new_y = dx, dy
-
-            node.scaleNode(QPoint(w, h), new_x, new_y, cb)
-
-            # check if krita has "nudged the node" and re-center
-            # (scaleNode sometimes offset layer 1px? float/int issue I guess)
-            nx, ny, ncx, ncy = get_node_coords(node)
-            if w - ncx != 0 or h - ncy != 0:
-                center_node(w, h, ncx, ncy, node)
+        
+        if op == "center_h":
+            center_node(w, h, w, ncy, node)
+        elif op == "center_v":
+            center_node(w, h, ncx, h, node)
         else:
-            # Need something to update move tool selection...
-            app.action('deselect').trigger()
-            # refresh is not enough
-            doc.refreshProjection()
+            center_node(w, h, ncx, ncy, node)
+
+            if op == "fit_bounds":
+                k_aspect = None
+
+                for item in k.findChildren(QtWidgets.QCheckBox):
+                    if item.text() == "Aspect":
+                        k_aspect = item
+                        break
+
+                if k_aspect.isChecked():
+                    # a little backwards
+                    factor = dx / float(nx)
+                    xc_y = int((float(ny)*float(factor)))
+                    xc_x = dx
+                    factor = dy / float(ny)
+                    yc_y = dy
+                    yc_x = int((float(nx)*float(factor)))
+
+                    if xc_x >= dx and xc_y <= dy:
+                        new_x = xc_x
+                        new_y = xc_y
+                    else:
+                        new_x = yc_x
+                        new_y = yc_y
+                else:
+                    new_x, new_y = dx, dy
+
+                node.scaleNode(QPoint(w, h), new_x, new_y, cb)
+
+                # check if krita has "nudged the node" and re-center
+                # (scaleNode sometimes offset layer 1px? float/int issue I guess)
+                nx, ny, ncx, ncy = get_node_coords(node)
+                if w - ncx != 0 or h - ncy != 0:
+                    center_node(w, h, ncx, ncy, node)
+                    
+        # Need something to update move tool selection...
+        app.action('deselect').trigger()
+        # refresh is not enough
+        doc.refreshProjection()
 
 
 class keCenter(Extension):
@@ -86,10 +92,42 @@ class keCenter(Extension):
 
     def ke_center(self):
         tf(op="center")
-
+        
     def createActions(self, window):
         action = window.createAction("keCenter", "keCenter")
         action.triggered.connect(self.ke_center)
+
+
+class keCenterH(Extension):
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+    def setup(self):
+        pass
+
+    def ke_center_h(self):
+        tf(op="center_h")
+        
+    def createActions(self, window):
+        action = window.createAction("keCenterH", "keCenterH")
+        action.triggered.connect(self.ke_center_h)
+
+
+class keCenterV(Extension):
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+    def setup(self):
+        pass
+
+    def ke_center_v(self):
+        tf(op="center_v")
+        
+    def createActions(self, window):
+        action = window.createAction("keCenterV", "keCenterV")
+        action.triggered.connect(self.ke_center_v)
 
 
 class keFitBounds(Extension):

@@ -23,7 +23,7 @@ class keGrid(Extension):
             grid_show.setCheckState(False)
             grid_snap.setCheckState(False)
         else:
-            # More Quick'n'Dirty docker variables
+            # More hacky docker variables
             k_snapping, k_thirds = None, None
             k = win.findChild(QtWidgets.QDockWidget, 'kekit_docker')
             for item in k.findChildren(QtWidgets.QCheckBox):
