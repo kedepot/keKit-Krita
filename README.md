@@ -50,12 +50,12 @@ Options:
 #### keBatch
 ![img_batchexport](https://github.com/kedepot/keKit-Krita/assets/95410139/8bb6f406-a491-496a-8bb8-ada4a6a5e70b)
 
-- Batch-Exports **visible paint layers, group layers, clone layers, & vector layers** from the current active document
-- Automatically creates a subfolder for the exports based on the document name & location
+- Batch-Exports paint, group, clone & vector layers, **set to visible**, from the current active document
+- Automatically creates a sub directory for the exports based on the document name & location
     - Thus requires new documents to be **saved** before batch operation
 - Visible **root** layers & groups that are named 'Fx' & 'Background' are **excluded**:
-    - Useful for processing each of the exported groups with the same effects and/or backdrop
-    - Any capitalization is accepted (e.g: fx, FX, Fx etc.) exclusion-words are converted to lower-case in the script
+    - Useful for processing each of the exported group etc. with the *same effects* and/or *backdrop*
+    - Any capitalization is accepted (e.g: fx, FX, Fx etc.)
 
 Option:
 - **JPG**: keBatch uses JPG instead of PNG.
