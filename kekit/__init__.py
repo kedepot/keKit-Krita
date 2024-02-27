@@ -17,8 +17,9 @@
 
 from krita import *
 from .kekit_docker import keKitDocker, v
-from .ke_grid import keGrid
+from .ke_average import keAverage
 from .ke_batch import keBatch
+from .ke_grid import keGrid
 from .ke_toRGBA import ToRGBA
 from .ke_transforms import keCenter, keFitBounds, keHalve, keDouble, keCenterH, keCenterV
 
@@ -31,18 +32,19 @@ __url__ = 'https://ke-code.xyz'
 
 instance = Krita.instance()
 
-# Load Extensions (first)
+# Load Extensions (First)
+instance.addExtension(ToRGBA(instance))
+instance.addExtension(keAverage(instance))
+instance.addExtension(keBatch(instance))
 instance.addExtension(keCenter(instance))
 instance.addExtension(keCenterH(instance))
 instance.addExtension(keCenterV(instance))
-instance.addExtension(keGrid(instance))
-instance.addExtension(keFitBounds(instance))
-instance.addExtension(keHalve(instance))
 instance.addExtension(keDouble(instance))
-instance.addExtension(keBatch(instance))
-instance.addExtension(ToRGBA(instance))
+instance.addExtension(keFitBounds(instance))
+instance.addExtension(keGrid(instance))
+instance.addExtension(keHalve(instance))
 
 # Load Docker (Last)
 DOCKER_ID = 'kekit_docker'
-dock_widget_factory = DockWidgetFactory(DOCKER_ID,DockWidgetFactoryBase.DockRight,keKitDocker)
+dock_widget_factory = DockWidgetFactory(DOCKER_ID, DockWidgetFactoryBase.DockRight, keKitDocker)
 instance.addDockWidgetFactory(dock_widget_factory)

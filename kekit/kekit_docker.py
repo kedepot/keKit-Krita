@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import (
 )
 
 
-v = '0.13'
+v = '0.14'
 
 
 class keKitDocker(DockWidget):
@@ -109,13 +109,28 @@ class keKitDocker(DockWidget):
         scalingCombo.addItem("Bicubic")
         scalingCombo.addItem("Hermite")
         
+        # Average Color
+        avg_button = QPushButton("keAverage")
+        avg_button.setText('AVG')
+        avg_button.setToolTip(
+            "Average Color in selection OR entire layer if no selection\n"
+            "Will ignore transparent pixels - for better average\n"
+            "Note: Using a selection = 2-3 undo-steps (action-macro)")
+        avg_opt = QCheckBox("avg_fast")
+        avg_opt.setText('F')
+        avg_opt.setChecked(True)
+        avg_opt.setToolTip(
+            "Set Average Color processing mode:\n"
+            "FAST: (On) Limited pixel sample size for substantial speed increase (any image size)\n"
+            "ACCURATE: (Off) Process every single pixel for more accurate result (*Very* slow)"
+        )
+
         # toRGBA
         RGBA_button = QPushButton("toRGBA")
         RGBA_button.setToolTip(
             "Combine SELECTED layers - in SELECTION ORDER for R,G,B,A (Alpha optional)\n"
             "combining them into a RGBA channel-packed 'splat map'\n"
             "Note: To use Alpha you must export with Split-Alpha process. See docs.")
-        # Options
         new_RGBA = QCheckBox("new_rgba")
         new_RGBA.setText('New')
         new_RGBA.setChecked(False)
@@ -149,6 +164,9 @@ class keKitDocker(DockWidget):
         h3 = QHBoxLayout()
         h3.setSpacing(1)
         # h3.setAlignment(Qt.AlignLeft)
+        h3.addWidget(avg_button)
+        h3.addWidget(avg_opt)
+        h3.addWidget(QLabel(separator))
         h3.addWidget(RGBA_button)
         h3.addWidget(new_RGBA)
         h3.addWidget(QLabel(separator))
@@ -173,6 +191,7 @@ class keKitDocker(DockWidget):
         halve_button.clicked.connect(partial(ButtonClicked, "keHalve"))
         double_button.clicked.connect(partial(ButtonClicked, "keDouble"))
         RGBA_button.clicked.connect(partial(ButtonClicked, "ToRGBA"))
+        avg_button.clicked.connect(partial(ButtonClicked, "keAverage"))
 
     def canvasChanged(self, canvas):
         # notifies when views are added or removed
