@@ -83,7 +83,7 @@ Choose preferred pixel transform processing method for Half, Double & Fit Bounds
 &nbsp;
 #### Average Color (AVG)
 Set selection (or entire layer, if you have no selection) to the average color of all the pixels.  
-Ignores transparent pixels - for a better/expected average
+Ignores color from transparent pixels - for a better/expected average
 - (F) Option:
   - FAST: (On) Limited pixel sample size for substantial speed increase (any image size)
   - ACCURATE: (Off) Process every single pixel for more accurate result (*Very* slow on large selections/images)
