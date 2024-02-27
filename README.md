@@ -1,6 +1,6 @@
 # keKit [](#)  
 
-A simple general purpose script collection plug-in.
+A simple general purpose script collection plug-in. Current version: 0.14
 
 Designed to be as compact as possible when used as a docker:
 
@@ -79,6 +79,15 @@ Option:
 #### Transform Method
 Choose preferred pixel transform processing method for Half, Double & Fit Bounds:
 - Mitchell, Lanczos3 etc.
+
+&nbsp;
+#### Average Color (AVG)
+Set selection (or entire layer, if you have no selection) to the average color of all the pixels. 
+- (F) Option:
+  - FAST: (On) Limited pixel sample size for substantial speed increase (any image size)
+  - ACCURATE: (Off) Process every single pixel for more accurate result (*Very* slow on large selections/images)
+  
+![VIDEO DEMO](https://github.com/kedepot/keKit-Krita/assets/95410139/984bff2e-867f-4d89-aca9-87c1fb493fff)
 
 &nbsp;
 #### toRBGA
