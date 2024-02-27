@@ -114,8 +114,7 @@ class keKitDocker(DockWidget):
         avg_button.setText('AVG')
         avg_button.setToolTip(
             "Average Color in selection OR entire layer if no selection\n"
-            "Will ignore transparent pixels - for better average\n"
-            "Note: Using a selection = 2-3 undo-steps (action-macro)")
+            "Will ignore transparent pixels for better average")
         avg_opt = QCheckBox("avg_fast")
         avg_opt.setText('F')
         avg_opt.setChecked(True)
