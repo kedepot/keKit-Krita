@@ -93,7 +93,7 @@ Ignores color from transparent pixels - for a better/expected average
 [vid_avg]: https://github.com/kedepot/keKit-Krita/assets/95410139/984bff2e-867f-4d89-aca9-87c1fb493fff
 
 &nbsp;
-#### toRBGA
+#### toRBGA (Channel Packing)
 ![2023-10-23_16-51-23](https://github.com/kedepot/keKit-Krita/assets/95410139/e837f3d1-ee43-4093-9f3c-37b062778b28)
 
 Automates Channel-packing 3-4 layers into a single image using the RGBA channels. Often used in real-time 3D. ['Splat-maps'](https://en.wikipedia.org/wiki/Texture_splatting) or ['ORM Textures'](https://docs.godotengine.org/en/stable/tutorials/3d/standard_material_3d.html) for example. 
