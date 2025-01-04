@@ -86,9 +86,11 @@ Set selection (or entire layer, if you have no selection) to the average color o
 Ignores color from transparent pixels - for a better/expected average
 - (F) Option:
   - FAST: (On) Limited pixel sample size for substantial speed increase (any image size)
-  - ACCURATE: (Off) Process every single pixel for more accurate result (*Very* slow on large selections/images)
-  
-![VIDEO DEMO](https://github.com/kedepot/keKit-Krita/assets/95410139/984bff2e-867f-4d89-aca9-87c1fb493fff)
+  - ACCURATE: (Off) Process every single pixel for more accurate result (*Very* slow on large selections/images)  
+
+[![VIDEO DEMO](https://github.com/user-attachments/assets/471338e5-993b-49d3-b709-243bbfb6964f)][vid_avg]
+
+[vid_avg]: https://github.com/kedepot/keKit-Krita/assets/95410139/984bff2e-867f-4d89-aca9-87c1fb493fff
 
 &nbsp;
 #### toRBGA
