@@ -39,23 +39,26 @@ Variants:
 #### keGrid
 ![img_grid](https://github.com/kedepot/keKit-Krita/assets/95410139/a9ae7e37-6be3-446e-8851-a0d492b27419)
 
-Calculates a relative grid (with two subdivisions) based on the document size
+Calculates a relative grid (with two subdivisions) based on the document size.  
+Note: Relative - not "Dynamic": Requires updating (toggle on&off) if your document size changes.  
+_Also: Some smaller visual glitches may occur - it is just auto-calculating the regular fixed grid._
 
 Options:
-- **Snap**: Also toggles snapping on/off
-  _Note: Krita layer snapping only uses *the mouse pointer*: Layer bounds+center snapping TBD_
+- **Snap**: Also toggles snapping on/off  
+  _Note: <ins>Krita layer snapping only uses **the mouse pointer**</ins>_  
+         _A layer bounding box (or center) based grid snapping solution does not exist afaict_
 - **3rd**: Uses Rule of Thirds instead for quad grid layout
 
 &nbsp; 
 #### keBatch
 ![img_batchexport](https://github.com/kedepot/keKit-Krita/assets/95410139/8bb6f406-a491-496a-8bb8-ada4a6a5e70b)
 
-- Batch-Exports paint, group, clone & vector layers, **set to visible**, from the current active document
+- Batch-exports paint, group, clone & vector **layers**, **set to visible**, from the current active document.
 - Automatically creates a sub directory for the exports based on the document name & location
-    - Thus requires new documents to be **saved** before batch operation
+    - The document needs to be **saved** before the batch operation
 - Visible **root** layers & groups that are named 'Fx' & 'Background' are **excluded**:
-    - Useful for processing each of the exported group etc. with the *same effects* and/or *backdrop*
-    - Any capitalization is accepted (e.g: fx, FX, Fx etc.)
+    - Useful for processing different groups with the *same effects* and/or *backdrop* (for example)
+    - **Any** capitalization style of 'Fx' and 'Background' will work (e.g: fx, FX, Fx etc.)
 
 Option:
 - **JPG**: keBatch uses JPG instead of PNG.
