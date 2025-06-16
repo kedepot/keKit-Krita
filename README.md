@@ -101,18 +101,20 @@ Ignores color from transparent pixels - for a better/expected average
 
 Automates Channel-packing 3-4 layers into a single image using the RGBA channels. Often used in real-time 3D. ['Splat-maps'](https://en.wikipedia.org/wiki/Texture_splatting) or ['ORM Textures'](https://docs.godotengine.org/en/stable/tutorials/3d/standard_material_3d.html) for example. 
 
-*Note: The Alpha channel in Krita is not editable separately (it will always destroy data in the RGB channels in standard PNG export).
+- The "New" option toggled will create a new document for the setup
+   
+**Instructions: RGB (No Alpha Channel)**
+- Select 3 layers : Selection order is important: **Select each layer in intended RGB order**
+- Run **toRGBA** & the selected layers will be arranged in a group, prepared for export
+- Export/save as usual  
+  
+**Instructions: RGBA**  
+The Alpha channel in Krita is not editable separately (it will always destroy data in the RGB channels in standard PNG export).
 Instead, Kritas "Split-Alpha" export can be used in these cases, including toRGBA, for full RGBA-packing export.*
 
-**Instructions:**
-- Select 1-4 layers : Selection order is important: **Select each layer in intended RGBA order**
-- Run **toRGBA**
-- The selected layers will be arranged in a group, prepared for export
-  - The "New" option toggled will create a new document for the setup
-- If you only use the 3 RGB channels, you may export/save as usual
-<br>
-
-- If there's an Alpha layer, it will need to be manually converted to a *Transparency Mask* (RMB, convert...)
+- Select 4 Layers in RGBA selection order
+- Run **toRGBA** & the selected layers will be arranged in a group, prepared for export
+- The Alpha layer will need to be manually converted to a *Transparency Mask* (RMB, convert...)
 - RMB the Alpha layer (as Group Transparency Mask) and select *Split-Alpha / Save as Merged*
   - As described the [Krita docs](https://docs.krita.org/en/reference_manual/layers_and_masks/split_alpha.html).
 - Note: The alpha layer will be selected & named "makeTM-SplitAlphaMerged" as a reminder/guide ;>
