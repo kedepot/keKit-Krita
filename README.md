@@ -1,6 +1,6 @@
 # keKit [](#)  
 
-A simple general purpose script collection plug-in. Current version: 0.14
+A simple general purpose script collection plug-in. 
 
 Designed to be as compact as possible when used as a docker:
 
