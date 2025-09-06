@@ -34,7 +34,6 @@ class keKitDocker(DockWidget):
         self.applicationName = 'keKit'
 
     def setupInterface(self):
-        
         # MAIN UI
         widget = QWidget()
         widget.setMinimumSize(320, 60)
@@ -46,11 +45,11 @@ class keKitDocker(DockWidget):
         separator = " ┊ "
 
         # DEFINE BUTTONS
-        
+
         # keGrid
         grid_button = QPushButton("keGrid")
         grid_button.setToolTip("Auto-calculate Image Size Relative Quad Grid")
-        # Options
+        # keGrid Options
         grid_snap = QCheckBox("cb_grid_snap")
         grid_snap.setText('Snap')
         grid_snap.setChecked(True)
@@ -64,11 +63,15 @@ class keKitDocker(DockWidget):
         batch_button.setToolTip("Batch Export VISIBLE root LAYERS & GROUPS\n"
                                 "Visible root layers & groups named 'fx' & 'background' are excluded\n"
                                 "(Use to affect each of the exported layers/groups)")
-        # Option
+        # keBatch Options
         jpg_export = QCheckBox("jpg_export")
         jpg_export.setText('jpg')
         jpg_export.setChecked(False)
         jpg_export.setToolTip("Checked: keBatch uses JPG instead of PNG")
+        t_mode = QCheckBox("texture_mode")
+        t_mode.setText('T')
+        t_mode.setChecked(False)
+        t_mode.setToolTip("Checked: Texture mode - autonaming, No alpha\n(+auto grayscale for non-color layers: TBD)")
 
         # Center
         center_button = QPushButton("Center")
@@ -79,11 +82,11 @@ class keKitDocker(DockWidget):
         center_v_button = QPushButton("V")
         center_v_button.setToolTip("Places selected layer in the vertical center of the document (only)")
         center_v_button.setMaximumWidth(40)
-        
+
         # Fit Bounds
         fit_button = QPushButton("Fit Bounds")
         fit_button.setToolTip("Stretches selected layer to fit the document bounds")
-        # Options
+        # Fit Bounds Options
         fit_aspect = QCheckBox("cb_fit_aspect")
         fit_aspect.setText('Aspect')
         fit_aspect.setChecked(True)
@@ -96,7 +99,7 @@ class keKitDocker(DockWidget):
         double_button = QPushButton("x2")
         double_button.setToolTip("Scale selected layer 200%")
         double_button.setMaximumWidth(40)
-        
+
         # Preferred Pixel Process
         scalingCombo = QComboBox()
         scalingCombo.setToolTip("Choose pixel transform processing method (for ½,x2 & Fit Bounds)")
@@ -108,13 +111,13 @@ class keKitDocker(DockWidget):
         scalingCombo.addItem("Box")
         scalingCombo.addItem("Bicubic")
         scalingCombo.addItem("Hermite")
-        
+
         # Average Color
         avg_button = QPushButton("keAverage")
         avg_button.setText('AVG')
         avg_button.setToolTip(
             "Average Color in selection OR entire layer if no selection\n"
-            "Will ignore transparent pixels for better average")
+            "Will ignore transparent pixels - for better average")
         avg_opt = QCheckBox("avg_fast")
         avg_opt.setText('F')
         avg_opt.setChecked(True)
@@ -129,12 +132,13 @@ class keKitDocker(DockWidget):
         RGBA_button.setToolTip(
             "Combine SELECTED layers - in SELECTION ORDER for R,G,B,A (Alpha optional)\n"
             "combining them into a RGBA channel-packed 'splat map'\n"
-            "Note: To use Alpha you must export with Split-Alpha process. See docs.")
+            "Alpha: SplitAlpha export: Select (group) T-mask, RMB/SplitAlpha/SaveMerged (See docs)")
         new_RGBA = QCheckBox("new_rgba")
         new_RGBA.setText('New')
         new_RGBA.setChecked(False)
-        new_RGBA.setToolTip("Check: Creates a new document for the generated RGBA group")
-        
+        new_RGBA.setToolTip("Check: Creates a new document for the generated RGBA group\n"
+                            "Note: Does not automate 'Convert to T-mask' step in new doc!")
+
         #
         # DEFINE UI ROWS
         #
@@ -171,6 +175,7 @@ class keKitDocker(DockWidget):
         h3.addWidget(QLabel(separator))
         h3.addWidget(batch_button)
         h3.addWidget(jpg_export)
+        h3.addWidget(t_mode)
 
         # ASSIGN ROWS TO MAIN UI
         vbox.addLayout(h1)
