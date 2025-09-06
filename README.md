@@ -56,15 +56,22 @@ Options:
 - Batch-exports paint, group, clone & vector **layers**, **set to visible**, from the current active document.
 - Automatically creates a sub directory for the exports based on the document name & location
     - The document needs to be **saved** before the batch operation
-- Visible **root** layers & groups that are named 'Fx' & 'Background' are **excluded**:
+- Visible **root** layers & groups that are named 'Fx', 'Background', "fg" or "bg" are **excluded**:
     - Useful for processing different groups with the *same effects* and/or *backdrop* (for example)
-    - **Any** capitalization style of 'Fx' and 'Background' will work (e.g: fx, FX, Fx etc.)
+    - Capitalization indifferent - any style will work: fx, FX, Fx etc.
 
-Option:
+Options:
 - **JPG**: keBatch uses JPG instead of PNG.
 - Format Defaults: (override in ke_batch.py if needed)
-  - PNG: Alpha, Level 0/Uncompressed. *For maximum speed now - [pngcrush](https://en.wikipedia.org/wiki/Pngcrush) later*
+  - PNG: Alpha, Level 0/Uncompressed. *For maximum speed now - [oxipng](https://github.com/oxipng/oxipng) (or [pngcrush](https://en.wikipedia.org/wiki/Pngcrush)) later*
   - JPG: 85%. *For WIP & quality insensitive use-cases*
+- **T**: "Texture Mode" - changes behaviour to a PBR game/vfx-ish texture export workflow:
+  - Exports will be placed in the same dir as the doc (**not** in a sub-dir as the default mode)
+  - Layers/groups named "b","d","r","m","ao","e","bump", "disp", "displacement", "roughness", "rough", "metal", "metallic", "emissive", or "mask",
+    will be exported as **8-bit grayscale**
+  - All others (such as "c" or "n") will be exported as **RGB 8-bit**.
+  - The layers/groups will use the document name as basename and add the the layer/group names as suffixes. E.g: "concrete01.kra" exports becomes "concrete01_c", "concrete01_r" etc.
+  - Note: The export will autosave (saved doc must be latest, far less annoying than to forget...)
 
 *Note: Slow - the process can take a long time in big documents with a lot groups*
 
