@@ -124,7 +124,7 @@ Instead, Kritas ["Split-Alpha"](https://docs.krita.org/en/reference_manual/layer
 
 - Select 4 Layers - in RGBA selection order
 - Run **chPack** & the selected layers will be arranged in a group, prepared for export
-- Use RMB on the created Group Transparency Mask (the "Alpha Channel") and select *Split-Alpha / Save as Merged*
+- Use RMB on the created Group Transparency Mask (as the "Alpha Channel") and use *Split-Alpha / Save as Merged*
 
 
 &nbsp;
