@@ -4,7 +4,7 @@ A simple general purpose script collection plug-in.
 
 Designed to be as compact as possible when used as a docker:
 
-<img width="33%" alt="docker" src="https://github.com/user-attachments/assets/8d6fc693-c39c-4541-a459-2e6754f34a9e" />
+<img width="40%" alt="docker" src="https://github.com/user-attachments/assets/8d6fc693-c39c-4541-a459-2e6754f34a9e" />
 
 &nbsp;
 ### Installation [](###)  
