@@ -120,11 +120,11 @@ Often used in real-time 3D. ['Splat-maps'](https://en.wikipedia.org/wiki/Texture
   
 **To Export RGBA**  
 The standard Krita PNG Export will erase data in the RGB channels when using Alpha.  
-Instead, Kritas "Split-Alpha" export is used for full RGBA channel export:  
+Instead, Kritas ["Split-Alpha"](https://docs.krita.org/en/reference_manual/layers_and_masks/split_alpha.html) feature is used for full RGBA channel export:  
 
 - Select 4 Layers - in RGBA selection order
 - Run **chPack** & the selected layers will be arranged in a group, prepared for export
-- Use RMB on the created Group Transparency Mask (the "Alpha Channel") and select [*Split-Alpha / Save as Merged*](https://docs.krita.org/en/reference_manual/layers_and_masks/split_alpha.html)
+- Use RMB on the created Group Transparency Mask (the "Alpha Channel") and select *Split-Alpha / Save as Merged*
 
 
 &nbsp;
