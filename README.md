@@ -113,12 +113,12 @@ Often used in real-time 3D. ['Splat-maps'](https://en.wikipedia.org/wiki/Texture
 
 - The "New" option toggled will create a new document for the setup
    
-**To Export RGB (No Alpha Channel)**
+**To Export RGB (No Alpha Channel)**:
 - Select 3 layers - **Select one by one in intended RGB order**
 - Run **chPack** & the selected layers will be arranged in a group, prepared for export
 - Export/save as usual  
   
-**To Export RGBA**  
+**To Export RGBA**:  
 The standard Krita PNG Export will erase data in the RGB channels when using Alpha.  
 Instead, Kritas ["Split-Alpha"](https://docs.krita.org/en/reference_manual/layers_and_masks/split_alpha.html) feature is used for full RGBA channel export:  
 
