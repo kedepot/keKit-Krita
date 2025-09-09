@@ -18,7 +18,7 @@ Designed to be as compact as possible when used as a docker:
    
 &nbsp;
 
-Note: Some scripts can be assigned to shortcuts (and some won't work without one!):
+Note: Some scripts can be assigned to shortcuts:
 
 <img width="50%" src="https://github.com/kedepot/keKit-Krita/assets/95410139/017ca795-6f67-4c4d-945c-5725ae1fcefe" />
 
