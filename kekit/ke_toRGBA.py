@@ -1,6 +1,6 @@
 import os
 from krita import *
-from PyQt5.Qt import QColor
+from PyQt5.Qt import QColor, QImage
 
 
 def create_fill(doc, x, y, name, color, alpha, blend):
@@ -14,15 +14,23 @@ def create_fill(doc, x, y, name, color, alpha, blend):
     return fl
 
 
-def create_channel(doc, sm_group, n, x, y, name, color):
+def create_channel(doc, sm_group, n, name):
     n.setVisible(True)
-    # fl = create_fill(doc, x, y, name + "_fill", color, True, "multiply")
     ch_group = doc.createNode(name + "_ch", "grouplayer")
     ch_group.setInheritAlpha(True)
     ch_group.setBlendingMode("copy_" + name)
     ch_group.addChildNode(n, None)
-    # ch_group.addChildNode(fl, None)
     sm_group.addChildNode(ch_group, None)
+
+
+def rgb_to_grayscale(src, tgt, w, h):
+    pxd = src.pixelData(0, 0, w, h)
+    img = QImage(pxd, w, h, QImage.Format_RGBA8888)
+    img.setAlphaChannel(QImage())  # Sets to zero/black (needed when src is not opaque)
+    img.convertTo(QImage.Format_Grayscale8)
+    ptr = img.constBits()
+    ptr.setsize(img.byteCount())
+    tgt.setPixelData(bytes(ptr.asarray()), 0, 0, w, h)
 
 
 class ToRGBA(Extension):
@@ -41,6 +49,9 @@ class ToRGBA(Extension):
         view = win.activeView()
         root = doc.rootNode()
         # node = doc.activeNode()
+        
+        # TBD: good suffix for the channel pack group..."_sm" for splat-map, "_orm"?
+        suffix = "_chPack"
 
         dname = doc.fileName()
         dx = doc.width()
@@ -83,7 +94,7 @@ class ToRGBA(Extension):
         new_bg = None
         if create_new_doc:
             # createDocument(width, height, name, colorSpace, bitDepth, colorProfile, DPI)
-            doc = app.createDocument(dx, dy, dname + "_sm", "RGBA", "U8", "", 300.0)
+            doc = app.createDocument(dx, dy, dname + suffix, "RGBA", "U8", "", 300.0)
             win.addView(doc)
             app.setActiveDocument(doc)
             root = doc.rootNode()
@@ -94,38 +105,31 @@ class ToRGBA(Extension):
             doc.waitForDone()
 
         # Create Main Group
-        sm_group = doc.createNode(dname + "_sm", "grouplayer")
+        sm_group = doc.createNode(dname + suffix, "grouplayer")
         root.addChildNode(sm_group, None)
         if new_bg:
             new_bg.remove()
 
         # Main Group Background
-        bg = create_fill(doc, dx, dy, dname + "_sm_bg", "black", False, "normal")
+        bg = create_fill(doc, dx, dy, "group_background", "black", False, "normal")
         sm_group.addChildNode(bg, None)
 
         # Create Channels
-        for n, ch in zip(nodes, channels):
-            if ch != "alpha":
+        for n, ch_name in zip(nodes, channels):
+            if ch_name != "alpha":
                 if create_new_doc:
                     ch_node = n.duplicate()
                 else:
                     ch_node = n
                     n.remove()
-                create_channel(doc, sm_group, ch_node, dx, dy, ch, QColor(ch))
-
+                create_channel(doc, sm_group, ch_node, ch_name)
+        
+        # 0 is the alpha ch (since list is reversed) if it exists:
         if channels[0] == "alpha":
-            if create_new_doc:
-                a = nodes[0].duplicate()
-            else:
-                a = nodes[0]
-                a.remove()
-            # a.setVisible(False)
-            a.setName("makeTM-SplitAlphaMerged")
-            sm_group.addChildNode(a, None)
-            doc.setActiveNode(a)
-            doc.refreshProjection()
-            doc.waitForDone()
-            app.action('convert_to_transparency_mask').trigger()  # does not work in new doc?!
+            tmask = doc.createTransparencyMask("a_ch-SplitAlpha_SaveMerged")
+            rgb_to_grayscale(nodes[0], tmask, dx, dy)
+            sm_group.addChildNode(tmask, None)
+            nodes[0].remove()
 
         # doc.setActiveNode(sm_group)  # does not work on groups?
         doc.refreshProjection()

@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import (
 )
 
 
-v = '0.16'
+v = '0.17'
 
 
 class keKitDocker(DockWidget):
