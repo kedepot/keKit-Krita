@@ -50,7 +50,14 @@ class keGrid(Extension):
             x_spacing = docker.findChild(QtWidgets.QWidget, 'intHSpacing')
             y_spacing = docker.findChild(QtWidgets.QWidget, 'intVSpacing')
             new_x, new_y = int(w  * factor_x), int(h * factor_y)
-
+            
+            # QoL - auto-remove offset...
+            # grid_offset = docker.findChild(QtWidgets.QCheckBox, 'chkOffset')
+            offset_x = docker.findChild(QtWidgets.QWidget, 'intXOffset')
+            offset_y = docker.findChild(QtWidgets.QWidget, 'intYOffset')
+            offset_x.setValue(0)
+            offset_y.setValue(0)
+            
             # Apply
             # - Aspect lock button cannot be state-checked afaict?
             # -> Brute force work-around: Apply, check if correct, Else "fake-click" & apply again...

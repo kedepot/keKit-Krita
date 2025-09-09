@@ -34,7 +34,7 @@ class keAverage(Extension):
         fast = True
         k = win.qwindow().findChild(QtWidgets.QDockWidget, 'kekit_docker')
         for item in k.findChildren(QtWidgets.QCheckBox):
-            if item.text() == "F":
+            if item.toolTip().startswith("FAST"):
                 fast = item.isChecked()
 
         dw, dh = doc.width(), doc.height()
@@ -72,7 +72,7 @@ class keAverage(Extension):
         endx = (startx + w)
         endy = (starty + h)
 
-        # Veeery slow without stepping - better method/opt TBD later:
+        # Very slow without stepping - better method/opt TBD
         for x in range(startx, endx, stepx):
             for y in range(starty, endy, stepy):
                 if img.valid(x, y):

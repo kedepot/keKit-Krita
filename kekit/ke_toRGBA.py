@@ -56,7 +56,7 @@ class ToRGBA(Extension):
         k = win.qwindow().findChild(QtWidgets.QDockWidget, 'kekit_docker')
         create_new_doc = False
         for item in k.findChildren(QtWidgets.QCheckBox):
-            if item.text() == "New":
+            if item.toolTip().startswith("New"):
                 create_new_doc = item.isChecked()
 
         # view stores actual selection order?! (too used to blender) :D
@@ -85,6 +85,7 @@ class ToRGBA(Extension):
             # createDocument(width, height, name, colorSpace, bitDepth, colorProfile, DPI)
             doc = app.createDocument(dx, dy, dname + "_sm", "RGBA", "U8", "", 300.0)
             win.addView(doc)
+            app.setActiveDocument(doc)
             root = doc.rootNode()
             new_bg = doc.topLevelNodes()[0]
         else:
@@ -118,16 +119,13 @@ class ToRGBA(Extension):
             else:
                 a = nodes[0]
                 a.remove()
-            a.setVisible(False)
+            # a.setVisible(False)
             a.setName("makeTM-SplitAlphaMerged")
             sm_group.addChildNode(a, None)
-
-            # actions are just cursed..."SAFE ASSERT"s
-            # if create_new_doc:
-            #     doc.setActiveNode(a)
-            #     doc.waitForDone()
-            #     app.action('convert_to_transparency_mask').trigger()
-            #     # app.action('split_alpha_save_merged').trigger()
+            doc.setActiveNode(a)
+            doc.refreshProjection()
+            doc.waitForDone()
+            app.action('convert_to_transparency_mask').trigger()  # does not work in new doc?!
 
         # doc.setActiveNode(sm_group)  # does not work on groups?
         doc.refreshProjection()

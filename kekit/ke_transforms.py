@@ -10,7 +10,7 @@ def get_node_coords(node):
     return nx, ny, ncx, ncy
 
 
-def center_node(w, h, ncx, ncy, node):
+def set_node_pos(w, h, ncx, ncy, node):
     offset = QPoint(w - ncx, h - ncy)
     pos = node.position()
     node.move(pos.x() + offset.x(), pos.y() + offset.y())
@@ -26,27 +26,51 @@ def tf(op):
 
     k = [i for i in app.dockers() if i.objectName() == "kekit_docker"][0]
     cb = [i.currentText() for i in k.findChildren(QtWidgets.QComboBox)][0]
+    # note: cb is 'scaling strategy' ("Mitchell" by default here)
 
     if op == "halve":
         node.scaleNode(QPoint(ncx, ncy), int(nx*0.5), int(ny*0.5), cb)
+        
     elif op == "double":
         node.scaleNode(QPoint(ncx, ncy), int(nx*2), int(ny*2), cb)
+        
+    elif op == "tile":
+        # check if in group
+        parent = node.parentNode() if node.parentNode() else doc.rootNode()
+        
+        n = node.duplicate()
+        n.setName(node.name() + "_tiled")
+        # note: node needs to be added to doc before transforms can happen:
+        parent.addChildNode(n, None)
+        
+        # scaling 
+        x = int(dx * 0.5)
+        y = int(dy * 0.5)
+        n.scaleNode(QPoint(0, 0), x, y, cb)
+
+        # ..and then tiling via pixeldata copy:
+        pixelBytes = n.pixelData(0, 0, x, y)
+        n.setPixelData(pixelBytes, x, 0, x, y)
+        n.setPixelData(pixelBytes, 0, y, x, y)
+        n.setPixelData(pixelBytes, x, y, x, y)
+        doc.refreshProjection()
+        
     else:
         # center & fit_bounds
         w, h = int(dx / 2), int(dy / 2)
         
         if op == "center_h":
-            center_node(w, h, w, ncy, node)
+            set_node_pos(w, h, w, ncy, node)
         elif op == "center_v":
-            center_node(w, h, ncx, h, node)
+            set_node_pos(w, h, ncx, h, node)
         else:
-            center_node(w, h, ncx, ncy, node)
+            set_node_pos(w, h, ncx, ncy, node)
 
             if op == "fit_bounds":
                 k_aspect = None
 
                 for item in k.findChildren(QtWidgets.QCheckBox):
-                    if item.text() == "Aspect":
+                    if item.toolTip().startswith("Aspect"):
                         k_aspect = item
                         break
 
@@ -74,7 +98,7 @@ def tf(op):
                 # (scaleNode sometimes offset layer 1px? float/int issue I guess)
                 nx, ny, ncx, ncy = get_node_coords(node)
                 if w - ncx != 0 or h - ncy != 0:
-                    center_node(w, h, ncx, ncy, node)
+                    set_node_pos(w, h, ncx, ncy, node)
                     
         # Need something to update move tool selection...
         app.action('deselect').trigger()
@@ -176,3 +200,19 @@ class keDouble(Extension):
     def createActions(self, window):
         action = window.createAction("keDouble", "keDouble")
         action.triggered.connect(self.ke_double)
+
+
+class keTile(Extension):
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+    def setup(self):
+        pass
+
+    def ke_tile(self):
+        tf(op="tile")
+
+    def createActions(self, window):
+        action = window.createAction("keTile", "keTile")
+        action.triggered.connect(self.ke_tile)
