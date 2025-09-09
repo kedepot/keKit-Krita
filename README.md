@@ -113,22 +113,18 @@ Often used in real-time 3D. ['Splat-maps'](https://en.wikipedia.org/wiki/Texture
 
 - The "New" option toggled will create a new document for the setup
    
-**Instructions: RGB (No Alpha Channel)**
-- Select 3 layers : Selection order is important: **Select each layer in intended RGB order**
+**To Export RGB (No Alpha Channel)**
+- Select 3 layers - **Select one by one in intended RGB order**
 - Run **chPack** & the selected layers will be arranged in a group, prepared for export
 - Export/save as usual  
   
-**Instructions: RGBA**  
-The Alpha channel in Krita is not editable separately:  
-The standard Krita PNG Export will always erase data in the RGB channels when using Alpha.  
-Instead, Kritas "Split-Alpha" export can be used for full RGBA channel export.  
+**To Export RGBA**  
+The standard Krita PNG Export will erase data in the RGB channels when using Alpha.  
+Instead, Kritas "Split-Alpha" export is used for full RGBA channel export:  
 
-- Select 4 Layers in RGBA selection order
+- Select 4 Layers - in RGBA selection order
 - Run **chPack** & the selected layers will be arranged in a group, prepared for export
-- The Alpha layer will need to be manually converted to a *Transparency Mask* (RMB, convert...)
-- Then use RMB on the Alpha layer (as Group Transparency Mask) and select *Split-Alpha / Save as Merged*
-  - As described the [Krita docs](https://docs.krita.org/en/reference_manual/layers_and_masks/split_alpha.html).
-- Note: The alpha layer will be selected & named "makeTM-SplitAlphaMerged" as a reminder/guide ;>
+- Use RMB on the created Group Transparency Mask (the "Alpha Channel") and select [*Split-Alpha / Save as Merged*](https://docs.krita.org/en/reference_manual/layers_and_masks/split_alpha.html)
 
 
 &nbsp;
