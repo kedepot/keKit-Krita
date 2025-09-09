@@ -88,7 +88,7 @@ Option:
 
 &nbsp;
 ### Transform Method
-Choose preferred pixel transform processing method for Half, Double & Fit Bounds:
+Choose preferred pixel transform processing method for Half, Double & Fit Bounds etc.
 - Mitchell, Lanczos3 etc.
 
 &nbsp;
