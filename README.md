@@ -84,7 +84,7 @@ Scale selected layer 50% or 200%
 ### Fit Bounds
 Stretches selected layer to fit the document bounds  
 Option:
-- **Aspect**: Fit Bounds maintains aspect ratio of the image
+- **Aspect**: Fit Bounds maintains aspect ratio of the layer
 
 &nbsp;
 ### Transform Method
