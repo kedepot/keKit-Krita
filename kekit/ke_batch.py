@@ -135,9 +135,6 @@ class keBatchTextures(Extension):
         export_name = os.path.splitext(file_name)[0]
         new_dir = os.path.dirname(docName)
 
-        # save needed to make sure changes are exported, and too annoying to remember manually
-        doc.save()
-
         # exportImage Export Parameters
         ep = InfoObject()
         exp_type = ".png"
@@ -159,10 +156,12 @@ class keBatchTextures(Extension):
         count = 0
 
         # Run Batch Export (for color textures)
+        gray_nodes = []
         doc.setBatchmode(True)
         for n in nodes:
             
             if n.name().lower() in gray_scale_naming:
+                gray_nodes.append(n)
                 continue
             
             layerName = export_name + "_" + n.name()
@@ -176,26 +175,24 @@ class keBatchTextures(Extension):
             doc.refreshProjection()
             doc.exportImage(layerPath, ep )
             count += 1
-            
-        for n in nodes:
-            n.setVisible(True)
         doc.setBatchmode(False)
-        
-        # Run Batch Export...again! in grayscale...
-        temp_doc = app.openDocument(docName)
-        # app.activeWindow().addView(temp_doc)  # seems it works fine not adding to view! not needed?
-        temp_doc.setColorSpace("GRAYA", "U8", "sRGB")
-        
-        nodes = [n for n in temp_doc.rootNode().childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in excluded]
 
-        temp_doc.setBatchmode(True)
-        for n in nodes:
-            if n.name().lower() in gray_scale_naming:
-                
+        if gray_nodes:
+            # Batch Export...in grayscale...
+            temp_doc = app.createDocument(doc.width(), doc.height(), "_tmp", "GRAYA", "U8", "sRGB", doc.resolution())
+            for n in gray_nodes:
+                dupe = n.duplicate()
+                temp_doc.rootNode().addChildNode(dupe, None)
+            
+            # new nodes (all nodes except auto-created Background node:)
+            temp_nodes = [n for n in temp_doc.rootNode().childNodes() if n.name() != "Background"]
+            
+            temp_doc.setBatchmode(True)
+            for n in temp_nodes:
                 layerName = export_name + "_" + n.name()
                 layerPath = os.path.join(new_dir, layerName + exp_type)
                 
-                for o_n in nodes:
+                for o_n in temp_nodes:
                     if o_n != n and o_n.visible():
                         o_n.setVisible(False)
                         
@@ -204,12 +201,12 @@ class keBatchTextures(Extension):
                 temp_doc.refreshProjection()
                 temp_doc.exportImage(layerPath, ep )
                 count += 1
-            
+                
+            temp_doc.setBatchmode(False)
+            temp_doc.close()
+    
         for n in nodes:
             n.setVisible(True)
-        temp_doc.setBatchmode(False)
-        temp_doc.close()
-        
         doc.refreshProjection()
         
         # Summary pop-up (mostly to signal export is done)

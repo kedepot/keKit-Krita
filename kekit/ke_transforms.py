@@ -25,16 +25,22 @@ def tf(op):
     nx, ny, ncx, ncy = get_node_coords(node)
 
     k = [i for i in app.dockers() if i.objectName() == "kekit_docker"][0]
-    cb = [i.currentText() for i in k.findChildren(QtWidgets.QComboBox)][0]
-    # note: cb is 'scaling strategy' ("Mitchell" by default here)
+    strategy = [i.currentText() for i in k.findChildren(QtWidgets.QComboBox)][0]
+    # note: strategy = 'scaling strategy' - Default: Lanczos3 scaling down & Mitchell scaling up
 
     if op == "halve":
-        node.scaleNode(QPoint(ncx, ncy), int(nx*0.5), int(ny*0.5), cb)
+        if strategy == "Default":
+            strategy = "Lanczos3"
+        node.scaleNode(QPoint(ncx, ncy), int(nx*0.5), int(ny*0.5), strategy)
         
     elif op == "double":
-        node.scaleNode(QPoint(ncx, ncy), int(nx*2), int(ny*2), cb)
+        if strategy == "Default":
+            strategy = "Mitchell"
+        node.scaleNode(QPoint(ncx, ncy), int(nx*2), int(ny*2), strategy)
         
     elif op == "tile":
+        if strategy == "Default":
+            strategy = "Lanczos3"
         # check if in group
         parent = node.parentNode() if node.parentNode() else doc.rootNode()
         
@@ -46,7 +52,7 @@ def tf(op):
         # scaling 
         x = int(dx * 0.5)
         y = int(dy * 0.5)
-        n.scaleNode(QPoint(0, 0), x, y, cb)
+        n.scaleNode(QPoint(0, 0), x, y, strategy)
 
         # ..and then tiling via pixeldata copy:
         pixelBytes = n.pixelData(0, 0, x, y)
@@ -91,8 +97,13 @@ def tf(op):
                         new_y = yc_y
                 else:
                     new_x, new_y = dx, dy
-
-                node.scaleNode(QPoint(w, h), new_x, new_y, cb)
+                
+                if strategy == "Default":
+                    if (new_x + new_y) > (w + h):
+                        strategy = "Mitchell"
+                    else:
+                        strategy = "Lanczos3"
+                node.scaleNode(QPoint(w, h), new_x, new_y, strategy)
 
                 # check if krita has "nudged the node" and re-center
                 # (scaleNode sometimes offset layer 1px? float/int issue I guess)

@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import (
 )
 
 
-v = '0.17'
+v = '0.18'
 
 
 class keKitDocker(DockWidget):
@@ -113,7 +113,11 @@ class keKitDocker(DockWidget):
         
         # Preferred Pixel Process
         scalingCombo = QComboBox()
-        scalingCombo.setToolTip("Choose pixel transform processing method for keKit tools\n(½, x2, Fit Bounds etc.)")
+        scalingCombo.setToolTip(
+            "Override Default transform scaling method for ½,x2,Fit etc.\n"
+            "Default: Lanczos3 scaling down & Mitchell scaling up"
+            )
+        scalingCombo.addItem("Default")
         scalingCombo.addItem("Mitchell")
         scalingCombo.addItem("Lanczos3")
         scalingCombo.addItem("Bspline")
