@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import (
 )
 
 
-v = '0.18'
+v = '0.19'
 
 
 class keKitDocker(DockWidget):
@@ -127,6 +127,14 @@ class keKitDocker(DockWidget):
         scalingCombo.addItem("Bicubic")
         scalingCombo.addItem("Hermite")
 
+        # Dupe
+        dupe_button = QPushButton("keDupe")
+        dupe_button.setMaximumWidth(max_width)
+        dupe_button.setText('Dup')
+        dupe_button.setToolTip(
+            "Duplicate selection (or entire layer, if no selection) directly into new layer\n"
+            "Tip: Also works on groups (no need to flatten)")
+
         # Average Color
         avg_button = QPushButton("keAverage")
         avg_button.setMaximumWidth(max_width)
@@ -185,6 +193,7 @@ class keKitDocker(DockWidget):
         h3 = QHBoxLayout()
         h3.setSpacing(spacing)
         h3.setAlignment(Qt.AlignLeft)
+        h3.addWidget(dupe_button)
         h3.addWidget(avg_button)
         h3.addWidget(avg_opt)
         h3.addWidget(QLabel(separator))
@@ -205,19 +214,20 @@ class keKitDocker(DockWidget):
         #
         # CONNECT SCRIPTS TO BUTTONS
         #
-        grid_button.clicked.connect(partial(ButtonClicked, "keGrid"))
+        avg_button.clicked.connect(partial(ButtonClicked, "keAverage"))
         batch_button.clicked.connect(partial(ButtonClicked, "keBatch"))
         batch_textures_button.clicked.connect(partial(ButtonClicked, "keBatchTextures"))
         center_button.clicked.connect(partial(ButtonClicked, "keCenter"))
         center_h_button.clicked.connect(partial(ButtonClicked, "keCenterH"))
         center_v_button.clicked.connect(partial(ButtonClicked, "keCenterV"))
-        fit_button.clicked.connect(partial(ButtonClicked, "keFitBounds"))
-        halve_button.clicked.connect(partial(ButtonClicked, "keHalve"))
         double_button.clicked.connect(partial(ButtonClicked, "keDouble"))
+        dupe_button.clicked.connect(partial(ButtonClicked, "keDupe"))
+        fit_button.clicked.connect(partial(ButtonClicked, "keFitBounds"))
+        grid_button.clicked.connect(partial(ButtonClicked, "keGrid"))
+        halve_button.clicked.connect(partial(ButtonClicked, "keHalve"))
         RGBA_button.clicked.connect(partial(ButtonClicked, "ToRGBA"))
-        avg_button.clicked.connect(partial(ButtonClicked, "keAverage"))
-        tile_button.clicked.connect(partial(ButtonClicked, "keTile"))
         seamless_button.clicked.connect(partial(ButtonClicked, "keSeamless"))
+        tile_button.clicked.connect(partial(ButtonClicked, "keTile"))
         
     def canvasChanged(self, canvas):
         # notifies when views are added or removed

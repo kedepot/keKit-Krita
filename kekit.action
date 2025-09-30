@@ -93,6 +93,19 @@
         <isCheckable>false</isCheckable>
         <statusTip></statusTip>
         </Action>
+        
+        <Action name="keDupe">
+        <icon></icon>
+        <text>keDupe</text>
+        <whatsThis>...</whatsThis>
+        <toolTip></toolTip>
+        <iconText></iconText>
+        <activationFlags>1</activationFlags>
+        <activationConditions>8</activationConditions>
+        <shortcut></shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
 
     </Actions>
 </ActionCollection>

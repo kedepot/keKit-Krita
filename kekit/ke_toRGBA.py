@@ -33,6 +33,13 @@ def rgb_to_grayscale(src, tgt, w, h):
     tgt.setPixelData(bytes(ptr.asarray()), 0, 0, w, h)
 
 
+def merge_group(doc, n, w, h):
+    pixel_array = n.projectionPixelData(0, 0, w, h)
+    new_node = doc.createNode(n.name() + '_merged','paintlayer')
+    new_node.setPixelData(pixel_array, 0, 0, w, h)
+    return new_node
+
+
 class ToRGBA(Extension):
 
     def __init__(self, parent):
@@ -50,7 +57,7 @@ class ToRGBA(Extension):
         root = doc.rootNode()
         # node = doc.activeNode()
         
-        # TBD: good suffix for the channel pack group..."_sm" for splat-map, "_orm"?
+        # TBD: good suffix for the channel pack group. note: "orm" auto-naming detection later
         suffix = "_chPack"
 
         dname = doc.fileName()
@@ -70,11 +77,11 @@ class ToRGBA(Extension):
             if item.toolTip().startswith("New"):
                 create_new_doc = item.isChecked()
 
-        # view stores actual selection order?! (too used to blender) :D
+        # view stores actual selection order?! (I'm too used to Blender...)
         nodes = view.selectedNodes()
 
         if not nodes:
-            # Just in case. Not sure if this is even possible? - Always one layer selected
+            # Just in case. Not sure if this is even possible? - Always one layer selected?
             view.showFloatingMessage("Invalid selection", app.icon("16_light_warning"), 3000, 1)
             return
 
@@ -85,6 +92,16 @@ class ToRGBA(Extension):
             nodes = nodes[:3]
             node_len = max_ch
         channels = ["red", "green", "blue", "alpha"][:node_len]
+
+        # ORM detection (simple, no user-errors mitigated...)
+        orm_naming= ["ao", "o", "r", "m"]
+        orm_count = 0
+        for n in nodes:
+            if n.name().lower() in orm_naming:
+                orm_count += 1
+        if orm_count >= 3:  # if 4: alpha "support"
+            dname = "orm"
+            suffix = ""
 
         # To get RGBA top-down ordered in group
         nodes.reverse()
@@ -104,6 +121,11 @@ class ToRGBA(Extension):
             doc.setColorSpace("RGBA", "U8", "")
             doc.waitForDone()
 
+        # replace local orm/a group if existing already
+        old_orm = doc.nodeByName("orm")
+        if old_orm is not None:
+            old_orm.remove()
+            
         # Create Main Group
         sm_group = doc.createNode(dname + suffix, "grouplayer")
         root.addChildNode(sm_group, None)
@@ -118,18 +140,29 @@ class ToRGBA(Extension):
         for n, ch_name in zip(nodes, channels):
             if ch_name != "alpha":
                 if create_new_doc:
-                    ch_node = n.duplicate()
+                    if n.type() == "grouplayer":
+                        ch_node = merge_group(doc, n, dx, dy)
+                    else:
+                        ch_node = n.duplicate()
                 else:
-                    ch_node = n
-                    n.remove()
+                    ch_node = doc.createCloneLayer(n.name() + '_clone', n)  
+                    
                 create_channel(doc, sm_group, ch_node, ch_name)
         
-        # 0 is the alpha ch (since list is reversed) if it exists:
+        # 0 is the alpha ch (since list is reversed) - if it exists:
         if channels[0] == "alpha":
-            tmask = doc.createTransparencyMask("a_ch-SplitAlpha_SaveMerged")
-            rgb_to_grayscale(nodes[0], tmask, dx, dy)
-            sm_group.addChildNode(tmask, None)
-            nodes[0].remove()
+            n = nodes[0]
+            if create_new_doc:
+                if n.type() == "grouplayer":
+                    alpha_node = merge_group(doc, n, dx, dy)
+                tmask = doc.createTransparencyMask("a_ch-SplitAlpha_SaveMerged")
+                rgb_to_grayscale(alpha_node, tmask, dx, dy)
+                sm_group.addChildNode(tmask, None)
+            else:
+                # alpha tm-mask cannot be clone layer...
+                tmask = doc.createCloneLayer('conv2TM_SplitAlpha-SaveMerged', n)
+                # tmask = doc.createTransparencyMask("a_ch-SplitAlpha_SaveMerged")  # etc. cannot convert clone to tmask here - manual labour req
+                sm_group.addChildNode(tmask, None)
 
         # doc.setActiveNode(sm_group)  # does not work on groups?
         doc.refreshProjection()

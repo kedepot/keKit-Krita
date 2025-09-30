@@ -44,7 +44,7 @@ class keBatch(Extension):
                 view.showFloatingMessage("Batch Export: Create directory failed! Unsaved file?", app.icon("16_light_warning"), 3000, 1)
                 raise e
 
-        # exportImage Export Parameters
+        # exportImage Export Parameters (leaving unused options commented out for ref...)
         ep = InfoObject()
         if jpg_export:
             exp_type = ".jpg"
@@ -147,35 +147,34 @@ class keBatchTextures(Extension):
         ep.setProperty("transparencyFillcolor", [0,0,0]) # rgb 0-255
 
         # Groups to Export
-        gray_scale_naming = {"b","d","r","m","ao","e", 
+        gray_scale_naming = {"b","d","r","m","ao","o","e", 
                              "bump", "disp", "displacement", "roughness", "rough", "metal", "metallic", "emissive", "mask"}
         
         e_t = {"paintlayer", "grouplayer", "clonelayer", "vectorlayer"}
+        
         nodes = [n for n in root_node.childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in excluded]
+        gray_nodes = [n for n in nodes if n.name().lower() in gray_scale_naming]
+        color_nodes = [n for n in nodes if n.name().lower() not in gray_scale_naming]
+        
         total_count = str(len(nodes))
         count = 0
+        
+        if color_nodes:
+            # Run Batch Export (for color textures)
+            doc.setBatchmode(True)
+            for n in color_nodes:
+                layerName = export_name + "_" + n.name()
+                layerPath = os.path.join(new_dir, layerName + exp_type)
+                
+                for o_n in nodes:
+                    if o_n != n and o_n.visible():
+                        o_n.setVisible(False)
+                n.setVisible(True)
 
-        # Run Batch Export (for color textures)
-        gray_nodes = []
-        doc.setBatchmode(True)
-        for n in nodes:
-            
-            if n.name().lower() in gray_scale_naming:
-                gray_nodes.append(n)
-                continue
-            
-            layerName = export_name + "_" + n.name()
-            layerPath = os.path.join(new_dir, layerName + exp_type)
-            
-            for o_n in nodes:
-                if o_n != n and o_n.visible():
-                    o_n.setVisible(False)
-            n.setVisible(True)
-
-            doc.refreshProjection()
-            doc.exportImage(layerPath, ep )
-            count += 1
-        doc.setBatchmode(False)
+                doc.refreshProjection()
+                doc.exportImage(layerPath, ep )
+                count += 1
+            doc.setBatchmode(False)
 
         if gray_nodes:
             # Batch Export...in grayscale...
