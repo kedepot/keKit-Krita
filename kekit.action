@@ -81,6 +81,19 @@
         <statusTip></statusTip>
         </Action>
 
+        <Action name="keDesat">
+        <icon></icon>
+        <text>keDesat</text>
+        <whatsThis>...</whatsThis>
+        <toolTip></toolTip>
+        <iconText></iconText>
+        <activationFlags>1</activationFlags>
+        <activationConditions>8</activationConditions>
+        <shortcut></shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+        
         <Action name="keDouble">
         <icon></icon>
         <text>keDouble</text>
