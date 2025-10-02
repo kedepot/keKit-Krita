@@ -19,7 +19,7 @@ def set_node_pos(w, h, ncx, ncy, node):
 def tf(op):
     app = Krita.instance()
     doc = app.activeDocument()
-    dx, dy = doc.width(), doc.height()
+    dw, dh = doc.width(), doc.height()
 
     node = doc.activeNode()
     nx, ny, ncx, ncy = get_node_coords(node)
@@ -50,8 +50,8 @@ def tf(op):
         parent.addChildNode(n, None)
         
         # scaling 
-        x = int(dx * 0.5)
-        y = int(dy * 0.5)
+        x = int(dw * 0.5)
+        y = int(dh * 0.5)
         n.scaleNode(QPoint(0, 0), x, y, strategy)
 
         # ..and then tiling via pixeldata copy:
@@ -63,7 +63,7 @@ def tf(op):
         
     else:
         # center & fit_bounds
-        w, h = int(dx / 2), int(dy / 2)
+        w, h = int(dw / 2), int(dh / 2)
         
         if op == "center_h":
             set_node_pos(w, h, w, ncy, node)
@@ -82,21 +82,21 @@ def tf(op):
 
                 if k_aspect.isChecked():
                     # a little backwards
-                    factor = dx / float(nx)
+                    factor = dw / float(nx)
                     xc_y = int((float(ny)*float(factor)))
-                    xc_x = dx
-                    factor = dy / float(ny)
-                    yc_y = dy
+                    xc_x = dw
+                    factor = dh / float(ny)
+                    yc_y = dh
                     yc_x = int((float(nx)*float(factor)))
 
-                    if xc_x >= dx and xc_y <= dy:
+                    if xc_x >= dw and xc_y <= dh:
                         new_x = xc_x
                         new_y = xc_y
                     else:
                         new_x = yc_x
                         new_y = yc_y
                 else:
-                    new_x, new_y = dx, dy
+                    new_x, new_y = dw, dh
                 
                 if strategy == "Default":
                     if (new_x + new_y) > (w + h):

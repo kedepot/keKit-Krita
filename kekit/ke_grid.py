@@ -25,11 +25,13 @@ class keGrid(Extension):
         else:
             # More hacky docker variables
             k_snapping, k_thirds = None, None
+            
             k = win.findChild(QtWidgets.QDockWidget, 'kekit_docker')
             for item in k.findChildren(QtWidgets.QCheckBox):
-                if item.text() == "Snap":
-                    k_snapping = item
-                elif item.text() == "3rd":
+                # disabled until useful...
+                # if item.text() == "Snap":
+                #     k_snapping = item
+                if item.text() == "3rd":
                     k_thirds = item
 
             # Calc Grid
@@ -42,14 +44,14 @@ class keGrid(Extension):
                 factor_y = 0.25
                 div = 2
 
-            w, h = doc.width(), doc.height()
+            dw, dh = doc.width(), doc.height()
 
             # Grab remaining props
             aspect_lock = docker.findChild(QtWidgets.QAbstractButton, 'spacingAspectButton')
             grid_div = docker.findChild(QtWidgets.QWidget, 'intSubdivision')
             x_spacing = docker.findChild(QtWidgets.QWidget, 'intHSpacing')
             y_spacing = docker.findChild(QtWidgets.QWidget, 'intVSpacing')
-            new_x, new_y = int(w  * factor_x), int(h * factor_y)
+            new_x, new_y = int(dw  * factor_x), int(dh * factor_y)
             
             # QoL - auto-remove offset...
             # grid_offset = docker.findChild(QtWidgets.QCheckBox, 'chkOffset')
@@ -77,8 +79,8 @@ class keGrid(Extension):
             # Apply grid settings
             grid_div.setValue(div)
             grid_show.setCheckState(True)
-            if k_snapping.isChecked():
-                grid_snap.setCheckState(True)
+            # if k_snapping.isChecked():
+            grid_snap.setCheckState(True)
 
 
     def createActions(self, window):

@@ -86,7 +86,7 @@ class keAverage(Extension):
                         g.append(c.green())
                         r.append(c.blue())
 
-        if r:
+        if r:  # then we also have g & b...
             num = len(r)
             eps = 0.000001
             sr, sg, sb = sum(r), sum(g), sum(b)

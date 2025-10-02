@@ -61,8 +61,8 @@ class ToRGBA(Extension):
         suffix = "_chPack"
 
         dname = doc.fileName()
-        dx = doc.width()
-        dy = doc.height()
+        dw = doc.width()
+        dh = doc.height()
 
         if not dname:
             dname = "unsaved_file"
@@ -111,7 +111,7 @@ class ToRGBA(Extension):
         new_bg = None
         if create_new_doc:
             # createDocument(width, height, name, colorSpace, bitDepth, colorProfile, DPI)
-            doc = app.createDocument(dx, dy, dname + suffix, "RGBA", "U8", "", 300.0)
+            doc = app.createDocument(dw, dh, dname + suffix, "RGBA", "U8", "", 300.0)
             win.addView(doc)
             app.setActiveDocument(doc)
             root = doc.rootNode()
@@ -121,7 +121,7 @@ class ToRGBA(Extension):
             doc.setColorSpace("RGBA", "U8", "")
             doc.waitForDone()
 
-        # replace local orm/a group if existing already
+        # replace local orm/a group if existing alreadh
         old_orm = doc.nodeByName("orm")
         if old_orm is not None:
             old_orm.remove()
@@ -133,7 +133,7 @@ class ToRGBA(Extension):
             new_bg.remove()
 
         # Main Group Background
-        bg = create_fill(doc, dx, dy, "group_background", "black", False, "normal")
+        bg = create_fill(doc, dw, dh, "group_background", "black", False, "normal")
         sm_group.addChildNode(bg, None)
 
         # Create Channels
@@ -141,7 +141,7 @@ class ToRGBA(Extension):
             if ch_name != "alpha":
                 if create_new_doc:
                     if n.type() == "grouplayer":
-                        ch_node = merge_group(doc, n, dx, dy)
+                        ch_node = merge_group(doc, n, dw, dh)
                     else:
                         ch_node = n.duplicate()
                 else:
@@ -154,9 +154,9 @@ class ToRGBA(Extension):
             n = nodes[0]
             if create_new_doc:
                 if n.type() == "grouplayer":
-                    alpha_node = merge_group(doc, n, dx, dy)
+                    alpha_node = merge_group(doc, n, dw, dh)
                 tmask = doc.createTransparencyMask("a_ch-SplitAlpha_SaveMerged")
-                rgb_to_grayscale(alpha_node, tmask, dx, dy)
+                rgb_to_grayscale(alpha_node, tmask, dw, dh)
                 sm_group.addChildNode(tmask, None)
             else:
                 # alpha tm-mask cannot be clone layer...

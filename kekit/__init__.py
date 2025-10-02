@@ -20,8 +20,10 @@ from .kekit_docker import keKitDocker, v
 from .ke_average import keAverage
 from .ke_batch import keBatch
 from .ke_batch import keBatchTextures
+from .ke_desat import keDesat
 from .ke_dupe import keDupe
 from .ke_grid import keGrid
+from .ke_invert import keInvertGreen
 from .ke_seamless import keSeamless
 from .ke_toRGBA import ToRGBA
 from .ke_transforms import keCenter, keFitBounds, keHalve, keDouble, keCenterH, keCenterV, keTile
@@ -43,11 +45,13 @@ instance.addExtension(keBatchTextures(instance))
 instance.addExtension(keCenter(instance))
 instance.addExtension(keCenterH(instance))
 instance.addExtension(keCenterV(instance))
+instance.addExtension(keDesat(instance))
 instance.addExtension(keDouble(instance))
 instance.addExtension(keDupe(instance))
 instance.addExtension(keFitBounds(instance))
 instance.addExtension(keGrid(instance))
 instance.addExtension(keHalve(instance))
+instance.addExtension(keInvertGreen(instance))
 instance.addExtension(keTile(instance))
 instance.addExtension(keSeamless(instance))
 

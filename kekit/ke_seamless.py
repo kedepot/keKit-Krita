@@ -54,23 +54,23 @@ class keSeamless(Extension):
             # OFFSET - via pixelByte quadrants copying...
             temp_offset = node.duplicate()  # note: removing later just in case
 
-            dx, dy = doc.width(), doc.height()
-            cx, cy = int(dx * 0.5), int(dy * 0.5)
+            dw, dh = doc.width(), doc.height()
+            cx, cy = int(dw * 0.5), int(dh * 0.5)
 
-            q1 = temp_offset.pixelData(0, 0, dx, dy)
-            q2 = temp_offset.pixelData(cx, 0, dx, dy)
-            q3 = temp_offset.pixelData(0, cy, dx, dy)
-            q4 = temp_offset.pixelData(cx, cy, dx, dy)
+            q1 = temp_offset.pixelData(0, 0, dw, dh)
+            q2 = temp_offset.pixelData(cx, 0, dw, dh)
+            q3 = temp_offset.pixelData(0, cy, dw, dh)
+            q4 = temp_offset.pixelData(cx, cy, dw, dh)
 
             # remap to offset quadrants - yea, overlapping is hacky ¯\_(ツ)_/¯
-            temp_offset.setPixelData(q4, 0, 0, dx, dy)
-            temp_offset.setPixelData(q3, cx, 0, dx, cy)
-            temp_offset.setPixelData(q2, 0, cy, dx, dy)
-            temp_offset.setPixelData(q1, cx, cy, dx, dy)
+            temp_offset.setPixelData(q4, 0, 0, dw, dh)
+            temp_offset.setPixelData(q3, cx, 0, dw, cy)
+            temp_offset.setPixelData(q2, 0, cy, dw, dh)
+            temp_offset.setPixelData(q1, cx, cy, dw, dh)
 
             # ...and the temp just to make sure it is cropped to bounds
-            crop_pd = temp_offset.pixelData(0, 0, dx, dy)
-            dupe.setPixelData(crop_pd, 0, 0, dx, dy)
+            crop_pd = temp_offset.pixelData(0, 0, dw, dh)
+            dupe.setPixelData(crop_pd, 0, 0, dw, dh)
                 
             group.addChildNode(dupe, None)
             group.addChildNode(src_dupe, None)
@@ -80,7 +80,7 @@ class keSeamless(Extension):
             tmask = doc.createTransparencyMask("co_transp_mask")
             src_dupe.addChildNode(tmask, None) 
 
-            import_to_layer(kpath, tmask, dx, dy)
+            import_to_layer(kpath, tmask, dw, dh)
 
             doc.refreshProjection()
             temp_offset.remove()

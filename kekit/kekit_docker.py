@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import (
 )
 
 
-v = '0.19'
+v = '0.20'
 
 
 class keKitDocker(DockWidget):
@@ -50,11 +50,11 @@ class keKitDocker(DockWidget):
         # keGrid
         grid_button = QPushButton("keGrid")
         grid_button.setToolTip("Auto-calculate Image Size Relative Quad Grid")
-        # keGrid Options
-        grid_snap = QCheckBox("cb_grid_snap")
-        grid_snap.setText('Snap')
-        grid_snap.setChecked(True)
-        grid_snap.setToolTip("keGrid also toggles grid snapping on/off")
+        # keGrid Options  - grid snapping is useless w/o layerbounds/center snapping. removed toggle.
+        # grid_snap = QCheckBox("cb_grid_snap")
+        # grid_snap.setText('Snap')
+        # grid_snap.setChecked(True)
+        # grid_snap.setToolTip("keGrid also toggles grid snapping on/off")
         grid_thirds = QCheckBox("cb_grid_thirds")
         grid_thirds.setText('3rd')
         grid_thirds.setToolTip("keGrid auto-calculates 'Rule of Thirds' instead of Quad")
@@ -134,6 +134,14 @@ class keKitDocker(DockWidget):
         dupe_button.setToolTip(
             "Duplicate selection (or entire layer, if no selection) directly into new layer\n"
             "Tip: Also works on groups (no need to flatten)")
+        
+        # Desaturate
+        desat_button = QPushButton("keDesat")
+        desat_button.setMaximumWidth(max_width)
+        desat_button.setText('Des')
+        desat_button.setToolTip(
+            "1-click (assign as shortcut) Desaturate\n"
+            "Tip: Also works on groups (creates new merged and desaturated layer)")
 
         # Average Color
         avg_button = QPushButton("keAverage")
@@ -149,6 +157,12 @@ class keKitDocker(DockWidget):
             "FAST: Avg (On) Limited pixel sample size for substantial speed increase (any image size)\n"
             "ACCURATE: (Off) Avg process every single pixel for more accurate result (slow!)"
         )
+
+        # Invert Green Channel
+        invgreen_button = QPushButton("keInvertGreen")
+        invgreen_button.setMaximumWidth(max_width)
+        invgreen_button.setText('invG')
+        invgreen_button.setToolTip("Invert Green Channel of selected layer (normal map)")
 
         # toRGBA
         RGBA_button = QPushButton("chPack")
@@ -174,8 +188,11 @@ class keKitDocker(DockWidget):
         h1.addWidget(center_v_button)
         h1.addWidget(QLabel(separator))
         h1.addWidget(grid_button)
-        h1.addWidget(grid_snap)
+        # h1.addWidget(grid_snap)
         h1.addWidget(grid_thirds)
+        h1.addWidget(QLabel(separator))
+        h1.addWidget(batch_button)
+        h1.addWidget(jpg_export)
 
         h2 = QHBoxLayout()
         h2.setSpacing(spacing)
@@ -194,15 +211,17 @@ class keKitDocker(DockWidget):
         h3.setSpacing(spacing)
         h3.setAlignment(Qt.AlignLeft)
         h3.addWidget(dupe_button)
+        h3.addWidget(desat_button)
+        h3.addWidget(invgreen_button)
         h3.addWidget(avg_button)
         h3.addWidget(avg_opt)
         h3.addWidget(QLabel(separator))
         h3.addWidget(RGBA_button)
         h3.addWidget(new_RGBA)
         h3.addWidget(QLabel(separator))
-        h3.addWidget(batch_button)
-        h3.addWidget(jpg_export)
-        h3.addWidget(QLabel(separator))
+        # h3.addWidget(batch_button)
+        # h3.addWidget(jpg_export)
+        # h3.addWidget(QLabel(separator))
         h3.addWidget(batch_textures_button)
 
         # ASSIGN ROWS TO MAIN UI
@@ -220,11 +239,13 @@ class keKitDocker(DockWidget):
         center_button.clicked.connect(partial(ButtonClicked, "keCenter"))
         center_h_button.clicked.connect(partial(ButtonClicked, "keCenterH"))
         center_v_button.clicked.connect(partial(ButtonClicked, "keCenterV"))
+        desat_button.clicked.connect(partial(ButtonClicked, "keDesat"))
         double_button.clicked.connect(partial(ButtonClicked, "keDouble"))
         dupe_button.clicked.connect(partial(ButtonClicked, "keDupe"))
         fit_button.clicked.connect(partial(ButtonClicked, "keFitBounds"))
         grid_button.clicked.connect(partial(ButtonClicked, "keGrid"))
         halve_button.clicked.connect(partial(ButtonClicked, "keHalve"))
+        invgreen_button.clicked.connect(partial(ButtonClicked, "keInvertGreen"))
         RGBA_button.clicked.connect(partial(ButtonClicked, "ToRGBA"))
         seamless_button.clicked.connect(partial(ButtonClicked, "keSeamless"))
         tile_button.clicked.connect(partial(ButtonClicked, "keTile"))
