@@ -34,7 +34,9 @@ as an alternative to the docker (for some scripts), or just a quick shortcut ove
 Snap/Move selected paint/vector/group layer by **Layer's nearest bounds** anchor point to the **Document's nearest bounds** anchor point  
 _Tip: Assign to shortcut_  
 
-[![video](https://raw.githubusercontent.com/kedepot/keKit-Krita/main/doc/bsnap_demo_thumb.webp)](https://raw.githubusercontent.com/kedepot/keKit-Krita/main/doc/krita_bsnap_lq.mp4)
+Short YouTube Video demo:  
+
+[![video](https://raw.githubusercontent.com/kedepot/keKit-Krita/main/doc/bsnap_demo_thumb.webp)](https://youtu.be/c9GR8rtBnoo)
 
 
 - These are the 9 (virtual) Bounds Anchor/Snapping Points (_for both layer(s) & document_):  
@@ -228,9 +230,9 @@ Note: Not listed in the keKit docker, as it is mostly replaced by _Arrange_. Sti
 ### 🔧 Seamless Tiling
 Simple 'cross-offset' seamless tiling - creates a group of masked layers.  
 
-Video Demo:  
+Short YouTube Video demo:  
 
-[![video](https://raw.githubusercontent.com/kedepot/keKit-Krita/main/doc/kekit_krita_seamless_tiling.webp)](https://raw.githubusercontent.com/kedepot/keKit-Krita/main/doc/kekit_krita_seamless_tiling.mp4)
+[![video](https://raw.githubusercontent.com/kedepot/keKit-Krita/main/doc/kekit_krita_seamless_tiling.webp)](https://youtu.be/oOc4unb3MU0)
 
 - This is a very simple method, do not expect every case to work well 
 - The mask is a regular PNG included in keKit, adjust to your liking if needed
