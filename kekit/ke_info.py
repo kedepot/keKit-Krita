@@ -23,5 +23,5 @@ class keInfo(Extension):
         messageBox.exec()
 
     def createActions(self, window):
-        action = window.createAction("", "keKit")
+        action = window.createAction("", "keKit", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_info)

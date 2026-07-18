@@ -49,5 +49,5 @@ class keDupe(Extension):
         # doc.refreshProjection()
 
     def createActions(self, window):
-        action = window.createAction("keDupe", "keDupe")
+        action = window.createAction("keDupe", "Dupe", "tools/scripts/keKit")
         action.triggered.connect(self.ke_dupe)

@@ -17,6 +17,9 @@
 
 from krita import *
 from .kekit_docker import keKitDocker, v
+from .kekit_menu import keKitMenu
+
+from .ke_arranger import keArrangeR
 from .ke_average import keAverage
 from .ke_batch import keBatch
 from .ke_batch import keBatchTextures
@@ -25,7 +28,8 @@ from .ke_dupe import keDupe
 from .ke_grid import keGrid
 from .ke_invert import keInvertGreen
 from .ke_seamless import keSeamless
-from .ke_toRGBA import ToRGBA
+from .ke_toRGBA import ToRGBA, SeparateORM
+from .ke_snapbounds import keSnapBounds
 from .ke_transforms import keCenter, keFitBounds, keHalve, keDouble, keCenterH, keCenterV, keTile
 
 __version__ = v
@@ -34,11 +38,15 @@ __author__ = 'Kjell Emanuelsson'
 __email__ = 'contact@ke-code.xyz'
 __url__ = 'https://ke-code.xyz'
 
-
 instance = Krita.instance()
 
-# Load Extensions (First)
+# Menu (dummy extension) to create tools/scripts sub-menu
+instance.addExtension(keKitMenu(instance))
+
+# Load Extensions
 instance.addExtension(ToRGBA(instance))
+instance.addExtension(SeparateORM(instance))
+instance.addExtension(keArrangeR(instance))
 instance.addExtension(keAverage(instance))
 instance.addExtension(keBatch(instance))
 instance.addExtension(keBatchTextures(instance))
@@ -54,6 +62,7 @@ instance.addExtension(keHalve(instance))
 instance.addExtension(keInvertGreen(instance))
 instance.addExtension(keTile(instance))
 instance.addExtension(keSeamless(instance))
+instance.addExtension(keSnapBounds(instance))
 
 # Load Docker (Last)
 DOCKER_ID = 'kekit_docker'

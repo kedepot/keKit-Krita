@@ -60,5 +60,5 @@ class keDesat(Extension):
         # doc.refreshProjection()
 
     def createActions(self, window):
-        action = window.createAction("keDesat", "keDesat")
+        action = window.createAction("keDesat", "Desaturate", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_desat)

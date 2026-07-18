@@ -3,6 +3,19 @@
     <Actions category="Scripts">
         <text>keKit</text>
 
+        <Action name="keSnapBounds">
+        <icon></icon>
+        <text>keBSnap</text>
+        <whatsThis>Snap (nearest) layer bounds to (nearest) doc bounds</whatsThis>
+        <toolTip></toolTip>
+        <iconText></iconText>
+        <activationFlags>1</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut></shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+        
         <Action name="keGrid">
         <icon></icon>
         <text>keGrid</text>

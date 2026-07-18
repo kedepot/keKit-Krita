@@ -24,8 +24,8 @@ def tf(op):
     node = doc.activeNode()
     nx, ny, ncx, ncy = get_node_coords(node)
 
-    k = [i for i in app.dockers() if i.objectName() == "kekit_docker"][0]
-    strategy = [i.currentText() for i in k.findChildren(QtWidgets.QComboBox)][0]
+    k = next(i for i in app.dockers() if i.objectName() == "kekit_docker")
+    strategy = k.findChild(QtWidgets.QComboBox, "scaling_method").currentText()
     # note: strategy = 'scaling strategy' - Default: Lanczos3 scaling down & Mitchell scaling up
 
     if op == "halve":
@@ -129,7 +129,7 @@ class keCenter(Extension):
         tf(op="center")
         
     def createActions(self, window):
-        action = window.createAction("keCenter", "keCenter")
+        action = window.createAction("keCenter", "Center", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_center)
 
 
@@ -145,7 +145,7 @@ class keCenterH(Extension):
         tf(op="center_h")
         
     def createActions(self, window):
-        action = window.createAction("keCenterH", "keCenterH")
+        action = window.createAction("keCenterH", "Center H", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_center_h)
 
 
@@ -161,7 +161,7 @@ class keCenterV(Extension):
         tf(op="center_v")
         
     def createActions(self, window):
-        action = window.createAction("keCenterV", "keCenterV")
+        action = window.createAction("keCenterV", "Center V", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_center_v)
 
 
@@ -177,7 +177,7 @@ class keFitBounds(Extension):
         tf(op="fit_bounds")
 
     def createActions(self, window):
-        action = window.createAction("keFitBounds", "keFitBounds")
+        action = window.createAction("keFitBounds", "Fit Bounds", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_fit_bounds)
 
 
@@ -193,7 +193,7 @@ class keHalve(Extension):
         tf(op="halve")
 
     def createActions(self, window):
-        action = window.createAction("keHalve", "keHalve")
+        action = window.createAction("keHalve", "Halve", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_halve)
 
 
@@ -209,9 +209,8 @@ class keDouble(Extension):
         tf(op="double")
 
     def createActions(self, window):
-        action = window.createAction("keDouble", "keDouble")
+        action = window.createAction("keDouble", "Double", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_double)
-
 
 class keTile(Extension):
 
@@ -225,5 +224,5 @@ class keTile(Extension):
         tf(op="tile")
 
     def createActions(self, window):
-        action = window.createAction("keTile", "keTile")
+        action = window.createAction("keTile", "Tile", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_tile)

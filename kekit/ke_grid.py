@@ -1,5 +1,5 @@
 from krita import *
-
+from math import ceil, floor
 
 class keGrid(Extension):
 
@@ -12,77 +12,65 @@ class keGrid(Extension):
     def ke_grid(self):
         app = Krita.instance()
         doc = app.activeDocument()
-        win = app.activeWindow().qwindow()
-        # Using docker for variable access
-        docker = win.findChild(QtWidgets.QDockWidget, 'GridDocker')
-        grid_show = docker.findChild(QtWidgets.QCheckBox, 'chkShowGrid')
-        grid_snap = docker.findChild(QtWidgets.QCheckBox, 'chkSnapToGrid')
+        win = app.activeWindow()
 
-        # Toggle
+        grid_box = win.qwindow().findChild(QtWidgets.QDockWidget, 'GridDocker')
+        if not grid_box:
+            return
+        grid_show = grid_box.findChild(QtWidgets.QCheckBox, 'chkShowGrid')
+        grid_snap = grid_box.findChild(QtWidgets.QCheckBox, 'chkSnapToGrid')
+
+        cfg = doc.gridConfig()
+
+        # toggle off
         if grid_show.isChecked():
-            grid_show.setCheckState(False)
-            grid_snap.setCheckState(False)
+            grid_show.setChecked(False)
+            grid_snap.setChecked(False)
+            cfg.setVisible(False)
+            cfg.setSnap(False)
+            doc.setGridConfig(cfg)
+            return
+
+        k = win.qwindow().findChild(QtWidgets.QDockWidget, 'kekit_docker')
+        k_thirds = k.findChild(QCheckBox, "grid_thirds").isChecked()
+        div_box = k.findChild(QtWidgets.QComboBox, "grid_div")
+        # div = div_box.currentData()  # if div_box else 2
+        pow2_div = int(div_box.currentData()) if div_box else 2  # 2..128
+        pow2_max = 128
+
+        # pow2_div = 2^exp (2->1, 4->2, ..., 128->7)
+        exp = int(pow2_div).bit_length() - 1
+
+        if k_thirds:
+            div = min(3 ** exp, pow2_max)  # cap to ~same max as pow2
         else:
-            # More hacky docker variables
-            k_snapping, k_thirds = None, None
-            
-            k = win.findChild(QtWidgets.QDockWidget, 'kekit_docker')
-            for item in k.findChildren(QtWidgets.QCheckBox):
-                # disabled until useful...
-                # if item.text() == "Snap":
-                #     k_snapping = item
-                if item.text() == "3rd":
-                    k_thirds = item
+            div = pow2_div
 
-            # Calc Grid
-            if k_thirds.isChecked():
-                factor_x = 0.333333
-                factor_y = 0.333333
-                div = 1
-            else:
-                factor_x = 0.25
-                factor_y = 0.25
-                div = 2
+        dw, dh = doc.width(), doc.height()
+        spacing_x = max(1, int(round(dw / float(div))))
+        spacing_y = max(1, int(round(dh / float(div))))
 
-            dw, dh = doc.width(), doc.height()
+        cfg.setType("rectangular")
+        cfg.setSpacing(QPoint(spacing_x, spacing_y))
+        cfg.setOffset(QPoint(0, 0))
 
-            # Grab remaining props
-            aspect_lock = docker.findChild(QtWidgets.QAbstractButton, 'spacingAspectButton')
-            grid_div = docker.findChild(QtWidgets.QWidget, 'intSubdivision')
-            x_spacing = docker.findChild(QtWidgets.QWidget, 'intHSpacing')
-            y_spacing = docker.findChild(QtWidgets.QWidget, 'intVSpacing')
-            new_x, new_y = int(dw  * factor_x), int(dh * factor_y)
-            
-            # QoL - auto-remove offset...
-            # grid_offset = docker.findChild(QtWidgets.QCheckBox, 'chkOffset')
-            offset_x = docker.findChild(QtWidgets.QWidget, 'intXOffset')
-            offset_y = docker.findChild(QtWidgets.QWidget, 'intYOffset')
-            offset_x.setValue(0)
-            offset_y.setValue(0)
-            
-            # Apply
-            # - Aspect lock button cannot be state-checked afaict?
-            # -> Brute force work-around: Apply, check if correct, Else "fake-click" & apply again...
-            # 1st Try
-            x_spacing.setValue(new_x)
-            y_spacing.setValue(new_y)
+        # subdivs cap at 10,not pow2, so clamping at 8 (or 9)
+        denom = 3 if k_thirds else 2
+        cap = 9 if k_thirds else 8
+        subdiv = min(cap, max(1, int(round(div / denom))))
+        cfg.setSubdivision(subdiv)
+        
+        cfg.setSpacingActiveHorizontal(True)
+        cfg.setSpacingActiveVertical(True)
+        cfg.setVisible(True)
+        cfg.setSnap(True)
 
-            # Check if the correct values have been applied:
-            x_spacing = docker.findChild(QtWidgets.QWidget, 'intHSpacing')
-            y_spacing = docker.findChild(QtWidgets.QWidget, 'intVSpacing')
-            if x_spacing.value() != new_x or y_spacing.value() != new_y:
-                # ...then 2nd try with fake-click
-                aspect_lock.click()
-                x_spacing.setValue(new_x)
-                y_spacing.setValue(new_y)
+        doc.setGridConfig(cfg)
 
-            # Apply grid settings
-            grid_div.setValue(div)
-            grid_show.setCheckState(True)
-            # if k_snapping.isChecked():
-            grid_snap.setCheckState(True)
+        grid_show.setChecked(True)
+        grid_snap.setChecked(True)
 
 
     def createActions(self, window):
-        action = window.createAction("keGrid", "keGrid")
+        action = window.createAction("keGrid", "keGrid", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_grid)

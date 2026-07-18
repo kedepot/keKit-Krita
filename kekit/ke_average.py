@@ -33,9 +33,7 @@ class keAverage(Extension):
 
         fast = True
         k = win.qwindow().findChild(QtWidgets.QDockWidget, 'kekit_docker')
-        for item in k.findChildren(QtWidgets.QCheckBox):
-            if item.toolTip().startswith("FAST"):
-                fast = item.isChecked()
+        fast = k.findChild(QCheckBox, "avg_opt").isChecked()
 
         dw, dh = doc.width(), doc.height()
 
@@ -104,5 +102,5 @@ class keAverage(Extension):
             # TO-DO: Progress display for slow mode? seems pretty tedious...
 
     def createActions(self, window):
-        action = window.createAction("keAverage", "keAverage")
+        action = window.createAction("keAverage", "Average", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_average)

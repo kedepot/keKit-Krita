@@ -1,6 +1,7 @@
 from krita import *
 import os
 
+EXCLUDED = ["fx", "foreground", "background", "fg", "bg"]
 
 class keBatch(Extension):
     
@@ -17,17 +18,12 @@ class keBatch(Extension):
         view = win.activeView()
         root_node = doc.rootNode()
         docName = doc.fileName()
-        excluded = ["fx", "background", "fg", "bg"]
         
         print("\nkeBatch Export Process Started...")
 
         # check options
         k = win.qwindow().findChild(QtWidgets.QDockWidget, 'kekit_docker')
-        jpg_export = False
-        
-        for item in k.findChildren(QtWidgets.QCheckBox):
-            if item.toolTip().startswith("JPG"):
-                jpg_export = item.isChecked()
+        jpg_export = k.findChild(QCheckBox, "jpg_export").isChecked()
 
         # paths
         file_name = os.path.basename(docName)
@@ -74,7 +70,7 @@ class keBatch(Extension):
 
         # Groups to Export
         e_t = {"paintlayer", "grouplayer", "clonelayer", "vectorlayer"}
-        nodes = [n for n in root_node.childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in excluded]
+        nodes = [n for n in root_node.childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in EXCLUDED]
         total_count = str(len(nodes))
         count = 0
 
@@ -107,7 +103,7 @@ class keBatch(Extension):
         
         
     def createActions(self, window):
-        action = window.createAction("keBatch", "keBatch")
+        action = window.createAction("keBatch", "Batch Export", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_batch)
 
 
@@ -126,8 +122,6 @@ class keBatchTextures(Extension):
         view = win.activeView()
         root_node = doc.rootNode()
         docName = doc.fileName()
-        excluded = ["fx", "background", "fg", "bg"]
-        
         print("\nkeBatch (Texture Mode) Export Process Started...")
 
         # paths
@@ -138,7 +132,7 @@ class keBatchTextures(Extension):
         # exportImage Export Parameters
         ep = InfoObject()
         exp_type = ".png"
-        ep.setProperty("alpha", False)
+        # ep.setProperty("alpha", False)  # check below
         ep.setProperty("compression", 0) # faster to just use oxipng/pngcrush etc.
         ep.setProperty("indexed", False)
         ep.setProperty("forceSRGB", False)
@@ -147,22 +141,38 @@ class keBatchTextures(Extension):
         ep.setProperty("transparencyFillcolor", [0,0,0]) # rgb 0-255
 
         # Groups to Export
-        gray_scale_naming = {"b","d","r","m","ao","o","e", 
+        gray_scale_naming = {"b","d","r","m","ao","o","e",
                              "bump", "disp", "displacement", "roughness", "rough", "metal", "metallic", "emissive", "mask"}
-        
         e_t = {"paintlayer", "grouplayer", "clonelayer", "vectorlayer"}
-        
-        nodes = [n for n in root_node.childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in excluded]
-        gray_nodes = [n for n in nodes if n.name().lower() in gray_scale_naming]
-        color_nodes = [n for n in nodes if n.name().lower() not in gray_scale_naming]
-        
+        # layer_exts = ("_b","_d","_r","_m","_ao","_o","_e","_nm", "_mask")
+
+        nodes = [n for n in root_node.childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in EXCLUDED]
+        # gray_nodes = [n for n in nodes if n.name().lower() in gray_scale_naming]
+        # color_nodes = [n for n in nodes if n.name().lower() not in gray_scale_naming]
+        color_nodes = []
+        gray_nodes = []
+        for n in nodes:
+            n_name = n.name().lower()
+            n_ext = n_name.split("_")[-1]
+            if n_name in gray_scale_naming or n_ext in gray_scale_naming:
+                gray_nodes.append(n)
+            else:
+                color_nodes.append(n) # color + normalmaps 
+
         total_count = str(len(nodes))
         count = 0
-        
+
         if color_nodes:
             # Run Batch Export (for color textures)
             doc.setBatchmode(True)
             for n in color_nodes:
+                ep.setProperty("alpha", False)
+                # Alpha group check
+                if n.type() == "grouplayer":
+                    for c in n.findChildNodes():
+                        if c.type() == "transparencymask":
+                            ep.setProperty("alpha", True)
+                            break
                 layerName = export_name + "_" + n.name()
                 layerPath = os.path.join(new_dir, layerName + exp_type)
                 
@@ -178,6 +188,8 @@ class keBatchTextures(Extension):
 
         if gray_nodes:
             # Batch Export...in grayscale...
+            ep.setProperty("alpha", False)
+
             temp_doc = app.createDocument(doc.width(), doc.height(), "_tmp", "GRAYA", "U8", "sRGB", doc.resolution())
             for n in gray_nodes:
                 dupe = n.duplicate()
@@ -214,5 +226,5 @@ class keBatchTextures(Extension):
             view.showFloatingMessage(msg, app.icon("light_dialog-ok"), 3000, 1)
         
     def createActions(self, window):
-        action = window.createAction("keBatchTextures", "keBatchTextures")
+        action = window.createAction("keBatchTextures", "Batch Export Textures", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_batch_texture_mode)

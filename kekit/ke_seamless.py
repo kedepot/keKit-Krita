@@ -93,5 +93,5 @@ class keSeamless(Extension):
 
                     
     def createActions(self, window):
-        action = window.createAction("keSeamless", "keSeamless")
+        action = window.createAction("keSeamless", "Seamless Texture", "Tools/Scripts/keKit")
         action.triggered.connect(self.ke_seamless)
