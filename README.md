@@ -1,9 +1,10 @@
 # keKit [](#)  
 
 A general purpose (script collection) plug-in.  
-The keKit Docker is designed to be as compact as possible, using tabs:
+The keKit Docker is designed to be as compact as possible. (Optionally using tabs):
 
 ![docker](doc/docker.webp)  
+_To use the alternative tabs-docker, switch the names for "kekit_docker.pybkp" & "kekit_docker.py"_
 &nbsp;
 
 ### Installation/Updating [](###)  
@@ -51,7 +52,6 @@ Short YouTube Video demo:
 In the options tab.
 - Grid Snapping (Intersections of grid lines make snapping points)  
 - Layer Snapping (other layers bounds' snapping points)  
-- _Tip: I find it easier/more natural to just toggle the grid (keGrid) off, or hide obstructing layers (to avoid snapping them) instead._
 
 
 &nbsp;
