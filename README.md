@@ -3,7 +3,7 @@
 A general purpose (script collection) plug-in.  
 The keKit Docker is designed to be as compact as possible. (Optionally using tabs):
 
-![docker](doc/docker.webp)  
+![docker](doc/docker2.webp)  
 _To use the alternative tabs-docker, switch the names for "kekit_docker.pybkp" & "kekit_docker.py"_
 &nbsp;
 
