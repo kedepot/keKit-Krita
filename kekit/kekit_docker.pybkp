@@ -17,12 +17,11 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QCheckBox,
     QSpinBox,
-    QToolButton,
 )
 
 v = '0.23'
 
-# NOTE: This is the single panel docker variant (no tabs)
+# Note: This is the Tabbeed docker variant
 # Use: Simply swap the names of the kekit_docker files, so the "kekit_docker.py" is the variant you want
 
 class keKitDocker(DockWidget):
@@ -39,17 +38,18 @@ class keKitDocker(DockWidget):
     def setupInterface(self):
         # MAIN UI
         widget = QWidget()
-        widget.setMinimumSize(342,156)
-        max_width = 28  # small boxes
-        swidth = int(max_width * 1.65)  # larger boxes
-        fwidth = 56  # left side main box special...
+        widget.setMinimumSize(332,104)
+        max_width = 36
+        swidth = int(max_width * 1.65)
 
         main = QVBoxLayout()
         main.setSpacing(3)
         main.setAlignment(Qt.AlignTop)
-
+        
         smallfont = QtGui.QFont()
         smallfont.setPointSize(8)
+        
+        spacing = 2  # gaps between items
 
         widget.setLayout(main)
 
@@ -60,7 +60,7 @@ class keKitDocker(DockWidget):
             sep.setAlignment(Qt.AlignCenter)
             sep.setFixedWidth(12)
             return sep
-
+        
         #
         # DEFINE BUTTONS
         #
@@ -70,7 +70,7 @@ class keKitDocker(DockWidget):
         self.grid_thirds = QCheckBox("cb_grid_thirds")
         self.grid_thirds.setObjectName("grid_thirds")
         self.grid_thirds.setMaximumWidth(swidth)
-        self.grid_thirds.setText('3rd')
+        self.grid_thirds.setText('Thirds')
         self.grid_thirds.setToolTip("keGrid auto-calculates 'Rule of Thirds' instead of Quad")
 
         self.grid_div = QtWidgets.QComboBox()
@@ -115,13 +115,12 @@ class keKitDocker(DockWidget):
 
         # Fit Bounds
         fit_button = QPushButton("Fit")
-        # fit_button.setMaximumWidth(swidth)
         fit_button.setToolTip("Stretches selected layer to fit the document bounds")
-        
         # Fit Bounds Options
-        self.fit_aspect = QCheckBox("Asp")
+        self.fit_aspect = QCheckBox("cb_fit_aspect")
         self.fit_aspect.setObjectName("fit_aspect")
         self.fit_aspect.setFont(smallfont)
+        self.fit_aspect.setText('Asp')
         self.fit_aspect.setChecked(True)
         self.fit_aspect.setToolTip("Aspect ratio is maintained by Fit Bounds if checked")
 
@@ -198,7 +197,7 @@ class keKitDocker(DockWidget):
 
         # ArrangeR - Raster Layer Arrange/Grid layout
         arranger_button = QPushButton("Arrange")
-        arranger_button.setMinimumWidth(fwidth)
+        arranger_button.setMinimumWidth(swidth)
         arranger_button.setToolTip("Arrange layer(s) (raster,vector etc.) in a grid layout\ndefined by columns & rows values dividing document size\n(For each selected layer, or, duplicate to fill if ONE selected)")
                 
         self.arr_col_spin = QSpinBox()
@@ -224,12 +223,6 @@ class keKitDocker(DockWidget):
         self.arr_scale.setObjectName("arr_scale")
         self.arr_scale.setChecked(True)
         self.arr_scale.setToolTip("Scale: Automatically scale layer(s) to fit the grid cell(s)")
-        
-        self.arr_group = QCheckBox("Group")
-        self.arr_group.setFont(smallfont)
-        self.arr_group.setObjectName("arr_group")
-        self.arr_group.setChecked(True)
-        self.arr_group.setToolTip("Group: Creates a new group and adds arranged nodes")
         
         self.arr_padding_spin = QSpinBox()
         self.arr_padding_spin.setPrefix('Pad ')
@@ -271,9 +264,15 @@ class keKitDocker(DockWidget):
         self.arr_aspect.setChecked(True)
         self.arr_aspect.setToolTip("Maintain layer aspect ratio when scaling - or scale to fit cell.")
 
+        self.arr_group = QCheckBox("Group")
+        self.arr_group.setFont(smallfont)
+        self.arr_group.setObjectName("arr_group")
+        self.arr_group.setChecked(True)
+        self.arr_group.setToolTip("Group: Creates a new group and adds arranged nodes")
+
         self.arr_anchor = QComboBox()
-        self.arr_anchor.setMaximumWidth(64)
         self.arr_anchor.setFont(smallfont)
+        self.arr_anchor.setMaximumWidth(64)
         self.arr_anchor.setObjectName("arr_anchor")
         self.arr_anchor.setToolTip("Select placement/alignment of the layer inside the grid cell\nNote: May work better with 'Scale' options off.")
         self.arr_anchor.addItem("Center")
@@ -287,9 +286,9 @@ class keKitDocker(DockWidget):
         self.arr_anchor.addItem("BottomRight")
 
         # Preferred Pixel (Transform) Process
-        scalingCombo_label = QLabel("Method:")
-        # scalingCombo_label.setAlignment(Qt.AlignLeft)
-        # scalingCombo_label.setFont(smallfont)
+        scalingCombo_label = QLabel("Scaling Method:")
+        scalingCombo_label.setAlignment(Qt.AlignLeft)
+        scalingCombo_label.setFont(smallfont)
         
         self.scalingCombo = QComboBox()
         self.scalingCombo.setFont(smallfont)
@@ -310,7 +309,6 @@ class keKitDocker(DockWidget):
 
         # Snap Layer Bounds to Doc Bounds
         snapbounds_button = QPushButton("BSnap")
-        snapbounds_button.setMinimumWidth(fwidth)
         snapbounds_button.setText('BSnap')
         snapbounds_button.setToolTip("Snap Selected Layer (bounds) to (nearest) Document bounds (or center!)\nAssign to shortcut!")
         
@@ -320,52 +318,61 @@ class keKitDocker(DockWidget):
         self.snapbounds_grid.setChecked(True)
         self.snapbounds_grid.setToolTip("Also use Grid (intersections) for bounds snap anchor points")
         
-        self.snapbounds_layers = QCheckBox("Bounds")
+        self.snapbounds_layers = QCheckBox("Layers")
         self.snapbounds_layers.setObjectName("bsnap_layers")
         self.snapbounds_layers.setFont(smallfont)
         self.snapbounds_layers.setChecked(False)
         self.snapbounds_layers.setToolTip("Also use -other- VISIBLE layers bounds anchor points for bounds snap")
         
-
+        # use_grid = k.findChild(QCheckBox, "bsnap_grid").isChecked()
+        # use_visible_layer_bounds = k.findChild(QCheckBox, "bsnap_layers").isChecked()
         #
-        # ASSIGN TO MAIN UI - margins note: (0, 4, 0, 0)  # left top right bottom
+        # ASSIGN ROWS TO MAIN UI (TABS) 
         #
-        ex, ef = QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
-        spacing = 2  # gaps between items
-
-#         def sep():
-#             sep = QtWidgets.QFrame()
-#             sep.setFrameShape(QtWidgets.QFrame.HLine)
-#             sep.setFrameShadow(QtWidgets.QFrame.Plain)
-#             sep.setLineWidth(1)
-#             sep.setPalette(QtWidgets.QApplication.palette())
-#             sep.setBackgroundRole(QtGui.QPalette.Shadow)
-#             sep.setContentsMargins(2, 8, 2, 8) 
-#             return sep
         
-        panel = QtWidgets.QWidget()
-        # panel.setSizePolicy(ex, ex)
-        p1 = QtWidgets.QVBoxLayout(panel)
-        p1.setContentsMargins(0,0,0,0)
-        # p1.setContentsMargins(0, 4, 0, 0)
-        p1.setSpacing(3)
+        tabs = QtWidgets.QTabWidget()
+        tabs.setDocumentMode(True)
+        tabs.setTabPosition(QtWidgets.QTabWidget.North)
+        tabs.setMovable(False)
+        tabs.setTabsClosable(False)
+        tabs.setUsesScrollButtons(True)
+        tabs.setStyle(QtWidgets.QApplication.style())
+        tabs.setPalette(QtWidgets.QApplication.palette())
+        
+        # Noted: Absolute PITA to style: default QT tabs is not the same style as krita's docker tabs
+        # (This is CLOSE ENOUGH) - Tip: do not touch colors in the stylesheet!
+        tabs.setStyleSheet("""
+        QTabBar::tab {
+            font-size: 7.5pt;
+            padding: 4px 8px 4px 8px;  /* top right bottom left */
+        }
+        QTabBar::tab:selected {
+            font-size: 8pt;
+        }
+        """)
+
+        #
+        # TAB 1
+        #
+        page1 = QtWidgets.QWidget()
+        p1 = QtWidgets.QVBoxLayout(page1)
+        p1.setContentsMargins(0, 4, 0, 0)  # left top right bottom
+        p1.setSpacing(0)
         
         p1_row1 = QHBoxLayout()
         p1_row1.setSpacing(spacing)
+        p1_row1.setAlignment(Qt.AlignLeft)
 
-        # p1_row1.setAlignment(Qt.AlignLeft)
-        
-        for w in [center_button, 
+        for w in [snapbounds_button,
+                  center_button, 
                   center_h_button, 
                   center_v_button, 
                   separator(), 
                   halve_button, 
                   double_button, 
                   fit_button, 
-                  self.fit_aspect,
-                  separator(),
-                  self.scalingCombo]:
-            w.setSizePolicy(ex, ef)
+                  self.fit_aspect]:
+            w.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             p1_row1.addWidget(w, 1)
 
         grid = QtWidgets.QGridLayout()
@@ -377,15 +384,13 @@ class keKitDocker(DockWidget):
         grid.setColumnMinimumWidth(0, btn_w)
         # 1st arranger grid row
         grid.addWidget(arranger_button, 0, 0)
-        # grid.addWidget(arranger_button, 0, 0, 2, 1)  # spans rows 0 and 1 in column 0
-        # arranger_button.setSizePolicy(arranger_button.sizePolicy().horizontalPolicy(), QtWidgets.QSizePolicy.Expanding)
         grid.addWidget(self.arr_col_spin, 0, 2)
         grid.addWidget(self.arr_row_spin, 0, 4)
         grid.addWidget(self.arr_scale, 0, 5)
         grid.addWidget(self.arr_aspect, 0, 6)
         grid.addWidget(self.arr_anchor, 0, 7, 1, 2)
         # 2nd arranger grid row
-        grid.addItem(QtWidgets.QSpacerItem(btn_w, 0, ef, ef), 1, 0)
+        grid.addItem(QtWidgets.QSpacerItem(btn_w, 0, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed), 1, 0)
         grid.addWidget(self.arr_padding_spin, 1, 2)
         grid.addWidget(self.arr_margin_spin, 1, 4)
         grid.addWidget(self.arr_group, 1, 5)
@@ -394,23 +399,22 @@ class keKitDocker(DockWidget):
         # min.vertical container for grid layout:
         grid_container = QtWidgets.QWidget()
         grid_container.setLayout(grid)
-        grid_container.setMinimumHeight(36)
+        grid_container.setMinimumHeight(48)
         
         p1.addLayout(p1_row1)
-        # p1.addWidget(grid_container)
+        p1.addWidget(grid_container)
 
         #
         # TAB 2
         #
-        # page2 = QtWidgets.QWidget()
-        # p2 = QtWidgets.QVBoxLayout(panel)
-        # p2.setContentsMargins(0, 4, 0, 0)
-        # p2.setSpacing(0)
+        page2 = QtWidgets.QWidget()
+        p2 = QtWidgets.QVBoxLayout(page2)
+        p2.setContentsMargins(0, 4, 0, 0)
+        p2.setSpacing(0)
                 
         p2_row1 = QHBoxLayout()
         p2_row1.setSpacing(spacing)
         p2_row1.setAlignment(Qt.AlignLeft)
-
         
         for w in [dupe_button,
                   seamless_button,
@@ -419,13 +423,12 @@ class keKitDocker(DockWidget):
                   invgreen_button, 
                   avg_button, 
                   self.avg_opt]:
-            w.setSizePolicy(ex, ef)
+            w.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             p2_row1.addWidget(w, 1)
 
         p2_row2 = QHBoxLayout()
         p2_row2.setSpacing(spacing)
         p2_row2.setAlignment(Qt.AlignLeft)
-        
         
         for w in [RGBA_button, 
                   SORM_button, 
@@ -433,91 +436,66 @@ class keKitDocker(DockWidget):
                   batch_button, 
                   self.jpg_export, 
                   batch_textures_button]:
-            w.setSizePolicy(ex, ef)
+            w.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
             p2_row2.addWidget(w, 1)
         
-        p1.addLayout(p2_row1)
-        p1.addLayout(p2_row2)
-
+        p2.addLayout(p2_row1)
+        p2.addLayout(p2_row2)
+        
         #
         # TAB 3 : Common settings:
         #
-        # page3 = QtWidgets.QWidget()
-        # p3 = QtWidgets.QVBoxLayout(panel)
-        # p3.setContentsMargins(0, 4, 0, 0)
-        # p3.setSpacing(0)
+        page3 = QtWidgets.QWidget()
+        p3 = QtWidgets.QVBoxLayout(page3)
+        p3.setContentsMargins(0, 4, 0, 0)
+        p3.setSpacing(0)
 
         p3_row1 = QHBoxLayout()
-        p3_row1.setSpacing(spacing)
-
-        # p3_row1.addWidget(grid_button)
-        # p3_row1.addWidget(self.grid_div)
-        # p3_row1.addWidget(self.grid_thirds)
-        # p3_row1.addWidget(separator())
-        # snapbounds_button,
-        # self.snapbounds_grid,
-        # self.snapbounds_layers,
-        # p3_row1.addWidget(scalingCombo_label)
-        # p3_row1.addWidget(self.scalingCombo)
+        p3_row1.addWidget(grid_button)
+        p3_row1.addWidget(self.grid_div)
+        p3_row1.addWidget(self.grid_thirds)
+        p3_row1.addWidget(separator())
+        p3_row1.addWidget(QLabel("BSnap:"))
+        p3_row1.addWidget(self.snapbounds_grid)
+        p3_row1.addWidget(self.snapbounds_layers)
         
-        for w in [grid_button, 
-                  self.grid_div, 
-                  self.grid_thirds, 
-                  separator(),
-                  snapbounds_button,
-                  self.snapbounds_grid,
-                  self.snapbounds_layers,
-                  # scalingCombo_label,
-                  ]:
-            w.setSizePolicy(ex, ef)
-            p3_row1.addWidget(w, 1)
+        p3_row2 = QHBoxLayout()
+        p3_row2.setAlignment(Qt.AlignRight)
+        p3_row2.addWidget(scalingCombo_label, 1, Qt.AlignVCenter)
+        p3_row2.addWidget(self.scalingCombo, 1, Qt.AlignVCenter)
         
-        # p3_row2 = QHBoxLayout()
-        # p3_row2.setAlignment(Qt.AlignRight)
-        # p3_row2.addWidget(scalingCombo_label, 1, Qt.AlignVCenter)
-        # p3_row2.addWidget(self.scalingCombo, 1, Qt.AlignVCenter)
-        
-        p1.addLayout(p3_row1)
-        # p1.addLayout(p3_row2)
-
-        p1.addWidget(grid_container)
-
+        p3.addLayout(p3_row1)
+        p3.addLayout(p3_row2)
 
         # ADD TABS
-        # tabs.addTab(page1, "Transform")
-        # tabs.addTab(page2, "Process")
-        # tabs.addTab(page3, "Options")
-        main.addWidget(panel)
+        tabs.addTab(page1, "Transform")
+        tabs.addTab(page2, "Process")
+        tabs.addTab(page3, "Options")
+        main.addWidget(tabs)
         
         self.setWidget(widget)
 
         #
         # CONNECT SCRIPTS TO BUTTONS
         #
-        button_map = {
-            arranger_button: "keArrangeR",
-            avg_button: "keAverage",
-            batch_button: "keBatch",
-            batch_textures_button: "keBatchTextures",
-            center_button: "keCenter",
-            center_h_button: "keCenterH",
-            center_v_button: "keCenterV",
-            desat_button: "keDesat",
-            double_button: "keDouble",
-            dupe_button: "keDupe",
-            fit_button: "keFitBounds",
-            grid_button: "keGrid",
-            halve_button: "keHalve",
-            invgreen_button: "keInvertGreen",
-            RGBA_button: "ToRGBA",
-            SORM_button: "SeparateORM",
-            seamless_button: "keSeamless",
-            snapbounds_button: "keSnapBounds",
-        }
-
-        for button, name in button_map.items():
-            button.clicked.connect(lambda checked=False, n=name: ButtonClicked(n))
-            
+        arranger_button.clicked.connect(partial(ButtonClicked, "keArrangeR"))
+        avg_button.clicked.connect(partial(ButtonClicked, "keAverage"))
+        batch_button.clicked.connect(partial(ButtonClicked, "keBatch"))
+        batch_textures_button.clicked.connect(partial(ButtonClicked, "keBatchTextures"))
+        center_button.clicked.connect(partial(ButtonClicked, "keCenter"))
+        center_h_button.clicked.connect(partial(ButtonClicked, "keCenterH"))
+        center_v_button.clicked.connect(partial(ButtonClicked, "keCenterV"))
+        desat_button.clicked.connect(partial(ButtonClicked, "keDesat"))
+        double_button.clicked.connect(partial(ButtonClicked, "keDouble"))
+        dupe_button.clicked.connect(partial(ButtonClicked, "keDupe"))
+        fit_button.clicked.connect(partial(ButtonClicked, "keFitBounds"))
+        grid_button.clicked.connect(partial(ButtonClicked, "keGrid"))
+        halve_button.clicked.connect(partial(ButtonClicked, "keHalve"))
+        invgreen_button.clicked.connect(partial(ButtonClicked, "keInvertGreen"))
+        RGBA_button.clicked.connect(partial(ButtonClicked, "ToRGBA"))
+        SORM_button.clicked.connect(partial(ButtonClicked, "SeparateORM"))
+        seamless_button.clicked.connect(partial(ButtonClicked, "keSeamless"))
+        snapbounds_button.clicked.connect(partial(ButtonClicked, "keSnapBounds"))
         
     def canvasChanged(self, canvas):
         # notifies when views are added or removed

@@ -70,7 +70,14 @@ class keBatch(Extension):
 
         # Groups to Export
         e_t = {"paintlayer", "grouplayer", "clonelayer", "vectorlayer"}
-        nodes = [n for n in root_node.childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in EXCLUDED]
+        
+        # nodes = [n for n in root_node.childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in EXCLUDED]
+        nodes = [n for n in view.selectedNodes() if n.type() in e_t and n.visible() and n.name().lower() not in EXCLUDED]
+        if not nodes:
+            # Just in case. Not sure if this is even possible? - Always one layer selected?
+            view.showFloatingMessage("Invalid selection", app.icon("16_light_warning"), 3000, 1)
+            return
+
         total_count = str(len(nodes))
         count = 0
 
@@ -147,8 +154,12 @@ class keBatchTextures(Extension):
         # layer_exts = ("_b","_d","_r","_m","_ao","_o","_e","_nm", "_mask")
 
         nodes = [n for n in root_node.childNodes() if n.type() in e_t and n.visible() and n.name().lower() not in EXCLUDED]
-        # gray_nodes = [n for n in nodes if n.name().lower() in gray_scale_naming]
-        # color_nodes = [n for n in nodes if n.name().lower() not in gray_scale_naming]
+        # nodes = [n for n in view.selectedNodes() if n.type() in e_t and n.name().lower() not in EXCLUDED]
+        if not nodes:
+            # Just in case. Not sure if this is even possible? - Always one layer selected?
+            view.showFloatingMessage("Invalid selection", app.icon("16_light_warning"), 3000, 1)
+            return
+        
         color_nodes = []
         gray_nodes = []
         for n in nodes:

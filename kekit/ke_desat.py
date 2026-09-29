@@ -1,6 +1,4 @@
-from krita import *
-from PyQt5.Qt import *
-
+from krita import Krita, Extension
 
 class keDesat(Extension):
 
@@ -13,51 +11,66 @@ class keDesat(Extension):
     def ke_desat(self):
         app = Krita.instance()
         doc = app.activeDocument()
-        node = doc.activeNode()
+        if not doc:
+            return
 
-        dw = doc.width()
-        dh = doc.height()
+        win = app.activeWindow()
+        view = win.activeView() if win else None
 
-        parent = node.parentNode() if node.parentNode() else doc.rootNode()
+        nodes = list(view.selectedNodes()) if view else []
+        if not nodes:
+            node = doc.activeNode()
+            if not node:
+                return
+            nodes = [node]
 
-        # Selection (or entire canvas if none) as alpha mask
-        mask = None
-        sel = doc.selection()
-        if sel:
-            maskBytes = sel.pixelData(0, 0, dw, dh)
-            mask = QImage(maskBytes, dw, dh, QImage.Format_Alpha8)
-        else:
-            mask = QImage()
+        filt = Application.filter("desaturate")
+        if not filt:
+            return
 
-        # Source Pixels
-        pixelBytes = node.projectionPixelData(0, 0, dw, dh)
-        img = QImage(pixelBytes, dw, dh, QImage.Format_RGBA8888)
-        # Desaturated copy
-        des = img.convertToFormat(QImage.Format_Grayscale8)
-        des.setAlphaChannel(mask)
+        def rasterize_to_paint(node, name):
+            rect = node.bounds()
+            x, y, w, h = rect.x(), rect.y(), rect.width(), rect.height()
+            if w <= 0 or h <= 0:
+                return None
 
-        # 'Paste' des on img via QPainter
-        painter = QPainter()
-        painter.begin(img)
-        # painter.setCompositionMode(QPainter.CompositionMode_DestinationAtop)  # no need?
-        painter.drawImage(0, 0, img)
-        painter.drawImage(0, 0, des)
-        painter.end()
+            parent = node.parentNode() or doc.rootNode()
+            paint = doc.createNode(name, "paintLayer")
+            parent.addChildNode(paint, node)
 
-        # convert to bits
-        ptr = img.constBits()
-        ptr.setsize(img.byteCount())
+            pixels = node.projectionPixelData(x, y, w, h)
+            if not pixels:
+                paint.remove()
+                return Noneg
 
-        new_node = doc.createNode('desat_' + node.name(),'paintlayer')
-        new_node.setPixelData(bytes(ptr.asarray()), 0, 0, dw, dh)
-        parent.addChildNode(new_node, node)
-        
-        # doing merge for single layer - or there is no undo! (+ we can skip refreshProjection!)
-        if node.type() != "grouplayer":
-            new_node.mergeDown()
+            paint.setPixelData(pixels, x, y, w, h)
+            return paint
 
-        # refresh overhead adds 1s (at 4k, for me) - but seems to not be needed here
-        # doc.refreshProjection()
+        for node in nodes:
+            ntype = node.type()
+
+            if ntype == "paintlayer":
+                target = node
+            else:
+                target = rasterize_to_paint(node, "desat_" + node.name())
+                if not target:
+                    continue
+                node.remove()
+
+            rect = target.bounds()
+            x, y, w, h = rect.x(), rect.y(), rect.width(), rect.height()
+            if w > 0 and h > 0:
+                filt.apply(target, x, y, w, h)
+
+            doc.refreshProjection()
+
+            # silly hack/workaround to refresh layer thumbnails too
+            for node in nodes:
+                bm = node.blendingMode()
+                node.setBlendingMode("allanon" if bm != "allanon" else "parallel")
+                node.setBlendingMode(bm)
+
+
 
     def createActions(self, window):
         action = window.createAction("keDesat", "Desaturate", "Tools/Scripts/keKit")

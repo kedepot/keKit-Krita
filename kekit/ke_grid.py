@@ -65,10 +65,11 @@ class keGrid(Extension):
         cfg.setVisible(True)
         cfg.setSnap(True)
 
-        doc.setGridConfig(cfg)
-
         grid_show.setChecked(True)
         grid_snap.setChecked(True)
+        doc.setGridConfig(cfg)
+        # win.qwindow().update()
+        # grid_box.update()
 
 
     def createActions(self, window):

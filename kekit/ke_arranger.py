@@ -40,23 +40,57 @@ class keArrangeR(Extension):
         crop_to_cell = k.findChild(QCheckBox, "arr_crop").isChecked()
         align = k.findChild(QComboBox, "arr_anchor").currentText().lower()
         keep_aspect = k.findChild(QCheckBox, "arr_aspect").isChecked()
+        group_result = k.findChild(QCheckBox, "arr_group").isChecked()
         # shared with the other scripts:
         strategy = k.findChild(QtWidgets.QComboBox, "scaling_method").currentText()
 
         slots = rows * cols
-        selected = list(view.selectedNodes())
-        if not selected:
+        selected_orig = list(view.selectedNodes())
+        if not selected_orig:
             raise Exception("No layers selected")
 
-        if len(selected) == 1 and slots > 1:
-            node = selected[0]
-            parent = node.parentNode() if node.parentNode() else doc.rootNode()
-            for _ in range(slots - 1):
-                dupe = node.duplicate()
-                parent.addChildNode(dupe, None)
-                selected.append(dupe)
+        source_parent = selected_orig[0].parentNode() if selected_orig else None
 
-        selected = selected[:slots]
+        # Hide originals
+        for n in selected_orig:
+            try:
+                n.setVisible(False)
+            except Exception:
+                pass
+
+        # Duplicate work-nodes to fill slots
+        work_nodes = []
+        base = selected_orig[:]  # selection order
+        i = 0
+        while len(work_nodes) < slots:
+            src = base[i % len(base)]
+            dupe = src.duplicate()
+            try:
+                dupe.setVisible(True)
+            except Exception:
+                pass
+            work_nodes.append(dupe)
+            i += 1
+
+        selected = work_nodes
+        doc.refreshProjection()
+
+        insert_parent = source_parent if source_parent else doc.rootNode()
+
+        if group_result and selected:
+            first_name = selected[0].name()
+            group = doc.createNode(first_name + " Arranged", "grouplayer")
+            insert_parent.addChildNode(group, None)
+
+            for node in list(selected):
+                old_parent = node.parentNode()
+                if old_parent:
+                    old_parent.removeChildNode(node)
+                group.addChildNode(node, None)
+        else:
+            # no group
+            for node in selected:
+                insert_parent.addChildNode(node, None)
 
         doc_w = float(doc.width())
         doc_h = float(doc.height())
@@ -70,7 +104,9 @@ class keArrangeR(Extension):
         if cell_w <= 0 or cell_h <= 0:
             raise Exception("Grid size seems invalid")
 
+
         def crop_pixels_to_rect(node, rect):
+            # obv. paint layer only...
             if node.type() != "paintlayer":
                 return None
 
@@ -85,7 +121,6 @@ class keArrangeR(Extension):
             src_w = b.width()
             src_h = b.height()
 
-            # Early out: no overlap
             left = max(x, src_x0)
             top = max(y, src_y0)
             right = min(x + w, src_x0 + src_w)
@@ -201,7 +236,7 @@ class keArrangeR(Extension):
                     print("Crop failed for node:", node.name(), e)
 
         doc.refreshProjection()
-
+            
     
     def createActions(self, window):
         action = window.createAction("keArrangeR", "Arrange", "Tools/Scripts/keKit")
